@@ -143,9 +143,10 @@ export default function SsList() {
             </button>
           </div>
           <div className="justify-self-center text-3xl font-black">
-            <button onClick={() => setSelectedDate(new Date(new Date().setHours(0,0,0,0)))}>
-              <img src={logo} alt="" className="w-10 h-10"></img>
-              List
+            <button onClick={() => setSelectedDate(new Date(new Date().setHours(0,0,0,0)))}
+              className="flex">
+              <img src={logo} alt="" className="w-10 h-10"></img>List
+              
             </button>
           </div>
           <div className="justify-self-end text-3xl font-bold">
