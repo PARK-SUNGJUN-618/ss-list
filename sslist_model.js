@@ -5,6 +5,7 @@ const pool = new Pool({
   database: 'd3t5qtt2gja7eq',
   password: '5254ba95ec0fc777cd6cbb3f0fbce876548e4e0dec8a99fb1854f524287f3496',
   port: 5432,
+  ssl: true
 });
 
 const getSsList = () => {
@@ -13,14 +14,14 @@ const getSsList = () => {
       if (error) {
         reject(error)
       }
-      resolve(results.rows);
+      resolve("asdasd");
     })
   }) 
 }
 
 const createSsList = (body) => {
   return new Promise(function(resolve, reject) {
-    const { name, email } = body
+    const { name } = body
     pool.query('INSERT INTO public.test_tbl (name) VALUES ($1) RETURNING *', [name], (error, results) => {
       if (error) {
         reject(error)

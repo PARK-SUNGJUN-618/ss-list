@@ -1,109 +1,96 @@
-const express = require("express");
-const app = express();
-const cors = require("cors");
-const pool = require("./db");
-const path = require("path");
-const PORT = process.env.PORT || 5000;
+// const express = require('express')
+// const app = express()
+// const port = 3001
 
-//process.env.PORT
-//process.env.NODE_ENV => production or undefined
+// const sslist_model = require('./sslist_model')
 
-//middleware
-app.use(cors());
-app.use(express.json()); // => allows us to access the req.body
+// app.use(express.json())
+// app.use(function (req, res, next) {
+//   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+//   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+//   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Access-Control-Allow-Headers');
+//   next();
+// });
 
-// app.use(express.static(path.join(__dirname, "client/build")));
-// app.use(express.static("./client/build")); => for demonstration
+// app.get('/', (req, res) => {
+//   sslist_model.getSsList()
+//   .then(response => {
+//     res.status(200).send(response);
+//   })
+//   .catch(error => {
+//     res.status(500).send(error);
+//   })
+// })
 
-if (process.env.NODE_ENV === "production") {
-  //server static content
-  //npm run build
-  app.use(express.static(path.join(__dirname, "client/build")));
-}
+// app.post('/sslistInsert', (req, res) => {
+//   sslist_model.createSsList(req.body)
+//   .then(response => {
+//     res.status(200).send(response);
+//   })
+//   .catch(error => {
+//     res.status(500).send(error);
+//   })
+// })
 
-console.log(__dirname);
-console.log(path.join(__dirname, "client/build"));
+// app.delete('/sslistDelete/:id', (req, res) => {
+//   sslist_model.deleteSsList(req.params.id)
+//   .then(response => {
+//     res.status(200).send(response);
+//   })
+//   .catch(error => {
+//     res.status(500).send(error);
+//   })
+// })
+// app.listen(port, () => {
+//   console.log(`App running on port ${port}.`)
+// })
 
-//ROUTES//
 
-//get all Todos
 
-app.get("/todos", async (req, res) => {
-  try {
-    const allTodos = await pool.query("SELECT * FROM public.test_tbl");
+// ------------------------------
+const express = require('express')
+const app = express()
+const port = 3001
 
-    res.json(allTodos.rows);
-  } catch (err) {
-    console.error(err.message);
-  }
+const sslist_model = require('./sslist_model')
+
+app.use(express.json())
+app.use(function (req, res, next) {
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Access-Control-Allow-Headers');
+  next();
 });
 
-//get a todo
+app.get('/', (req, res) => {
+  sslist_model.getSsList()
+  .then(response => {
+    res.status(200).send(response);
+  })
+  .catch(error => {
+    res.status(500).send(error);
+  })
+})
 
-app.get("/todos/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
-    const todo = await pool.query("SELECT * FROM public.test_tbl WHERE id = $1", [
-      id,
-    ]);
-    res.json(todo.rows[0]);
-  } catch (err) {
-    console.error(err.message);
-  }
-});
+app.post('/sslist', (req, res) => {
+  sslist_model.createSsList(req.body)
+  .then(response => {
+    res.status(200).send(response);
+  })
+  .catch(error => {
+    res.status(500).send(error);
+  })
+})
 
-//create a todo
-
-app.post("/todos", async (req, res) => {
-  try {
-    console.log(req.body);
-    const { description } = req.body;
-    const newTodo = await pool.query(
-      "INSERT INTO public.test_tbl (name) VALUES ($1) RETURNING *",
-      [description]
-    );
-
-    res.json(newTodo.rows[0]);
-  } catch (err) {
-    console.error(err.message);
-  }
-});
-
-//update a todo
-
-app.put("/todos/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { description } = req.body;
-    const updateTodo = await pool.query(
-      "UPDATE public.test_tbl SET name = $1 WHERE id = $2",
-      [description, id]
-    );
-
-    res.json("Todo was updated");
-  } catch (err) {
-    console.error(err.message);
-  }
-});
-
-//delete a todo
-
-app.delete("/todos/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
-    const deleteTodo = await pool.query("DELETE FROM public.test_tbl WHERE id = $1", [
-      id,
-    ]);
-    res.json("Todo was deleted");
-  } catch (err) {
-    console.error(err.message);
-  }
-});
-
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "client/build/index.html"));
-});
-
-app.listen(PORT, () => {
-  console.log(`Server is starting on port ${PORT}`);
-});
+app.delete('/sslist/:id', (req, res) => {
+  sslist_model.deleteSsList(req.params.id)
+  .then(response => {
+    res.status(200).send(response);
+  })
+  .catch(error => {
+    res.status(500).send(error);
+  })
+})
+app.listen(port, () => {
+  console.log(`App running on port ${port}.`)
+})
