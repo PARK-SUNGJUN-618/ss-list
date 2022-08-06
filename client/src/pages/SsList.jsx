@@ -6,6 +6,7 @@ import logo from "../img/trnLogo.png";
 import SsListContent from '../components/SsListContent';
 
 export default function SsList() {
+  
   const initialData = [
     {
       ssKey: 1,
@@ -51,7 +52,50 @@ export default function SsList() {
   const [ssTasks, setSsTasks] = useState(initialData);
   const [ssTitle, setSsTitle] = useState('');
   const [ssContent, setSsContent] = useState('');
+  const [dbtest, setDbtest] = useState(false);
 
+  useEffect(() => {
+    getMerchant();
+  }, []);
+
+  function getMerchant() {
+    fetch('http://localhost:3001')
+      .then(response => {
+        return response.text();
+      })
+      .then(data => {
+        setDbtest(data);
+      });
+  }
+  function createMerchant() {
+    let name = prompt('Enter name');
+    fetch('http://localhost:3001/sslistInsert', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({name}),
+    }).then(response => {
+      return response.text();
+    }).then(data => {
+      alert(data);
+      getMerchant();
+    });
+  }
+
+  function deleteMerchant() {
+    let id = prompt('Enter merchant id');
+    fetch(`http://localhost:3001/sslistDelete/${id}`, {
+      method: 'DELETE',
+    })
+      .then(response => {
+        return response.text();
+      })
+      .then(data => {
+        alert(data);
+        getMerchant();
+      });
+  }
 
   const dayIncrease = () => {
     setSelectedDate(addDays(selectedDate, 1));
@@ -132,6 +176,13 @@ export default function SsList() {
 
   return (
     <>
+      <div>
+        {dbtest ? dbtest : 'There is no merchant data available'}
+        <br />
+        <button onClick={createMerchant}>Add merchant</button>
+        <br />
+        <button onClick={deleteMerchant}>Delete merchant</button>
+      </div>
       <div className="w-screen h-screen bg-zinc-200 bg-dot_pattern bg-[length:30px_30px] ">
         <NewLine />
         <div className="grid grid-cols-3 justify-between items-center">
