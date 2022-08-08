@@ -2,10 +2,14 @@ const express = require('express');
 const app = express();
 const cors = require("cors");
 const pool = require("./db");
-const port = 3001;
+const port = process.env.PORT || 5000
 
 app.use(cors());
 app.use(express.json());
+
+app.use('/api/data', function(req, res) {
+  res.json({ greeting: 'Hello World' });
+});
 
 //create a task
 app.post("/sslist", async (req, res) => {
