@@ -52,17 +52,79 @@ export default function SsList() {
   const [ssTasks, setSsTasks] = useState(initialData);
   const [ssTitle, setSsTitle] = useState('');
   const [ssContent, setSsContent] = useState('');
-  // const [dbtest, setDbtest] = useState(false);
+  const [dbtest, setDbtest] = useState([]);
 
-  // useEffect(() => {
-  //   getMerchant();
-  // }, []);
+  const createTask = async e => {
+    e.preventDefault();
+    try {
+      const body = { name: "testName!" };
+      const response = await fetch("http://localhost:3001/sslist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json"},
+        body: JSON.stringify(body)
+      })
 
+      console.log(response);
+      getTasks();
+    } catch (err) {
+      console.error(err.message);
+    }
+  }
+
+  const getTasks = async() => {
+    try {
+      const response = await fetch("http://localhost:3001/sslist")
+      const jsonData = await response.json()
+
+      setDbtest(jsonData);
+      
+    } catch (err) {
+      console.error(err.message);
+    }
+  }
+
+  const deleteTask = async (id) => {
+    try {
+      const deleteTask = await fetch(`http://localhost:3001/sslist/${id}`, {
+        method: "DELETE"
+      });
+
+      console.log(deleteTask)
+      // getTasks();
+      setDbtest(dbtest.filter(task => task.id !== id));
+
+    } catch (err) {
+      console.error(err.message);
+    }
+  }
+
+  const updateTask = async(e) => {
+    e.preventDefault();
+    try {
+      const body = { name : "updateName"};
+      const response = await fetch(`http://localhost:3001/sslist/2`,{
+        method: "PUT",
+        headers: { "Content-Type": "application/json"},
+        body: JSON.stringify(body)
+      })
+
+      getTasks();
+      console.log(response);
+    } catch (err) {
+      console.error(err.message);
+    }
+  }
+  
+  useEffect(() => {
+    getTasks();
+  }, []);
+  
+  console.log(dbtest);
   // function getMerchant() {
-  //   fetch('http://localhost:3001')
-  //     .then(response => {
-  //       return response.text();
-  //     })
+    //   fetch('http://localhost:3001')
+    //     .then(response => {
+      //       return response.text();
+      //     })
   //     .then(data => {
   //       setDbtest(data);
   //     });
@@ -176,13 +238,15 @@ export default function SsList() {
 
   return (
     <>
-      {/* <div>
-        {dbtest ? dbtest : 'There is no merchant data available'}
-        <br />
-        <button onClick={createMerchant}>Add merchant</button>
-        <br />
-        <button onClick={deleteMerchant}>Delete merchant</button>
-      </div> */}
+      <div>
+        {dbtest ? dbtest.map(dbtest => <div key={dbtest.id}>
+          {dbtest.id}:{dbtest.name}
+          <button onClick={(e) => updateTask(e)}> mod </button>
+          <button onClick={() => deleteTask(dbtest.id)}> del </button>
+        </div>) : 'There is no sslist data available'}
+        <button onClick={createTask}>Add Task</button>
+        {/* <button onClick={deleteMerchant}>Delete merchant</button> */}
+      </div>
       <div className="w-screen h-screen bg-zinc-200 bg-dot_pattern bg-[length:30px_30px] ">
         <NewLine />
         <div className="grid grid-cols-3 justify-between items-center">
