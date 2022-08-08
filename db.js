@@ -9,7 +9,7 @@ const pool = new Pool({
   database: "postgres"
 })
 
-// myHeroku
+//// myHeroku
 // const pool = new Pool({
 //   user: "kmirzodfixqdah",
 //   password: "5254ba95ec0fc777cd6cbb3f0fbce876548e4e0dec8a99fb1854f524287f3496",

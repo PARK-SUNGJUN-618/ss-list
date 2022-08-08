@@ -240,7 +240,7 @@ export default function SsList() {
     <>
       <div>
         {dbtest ? dbtest.map(dbtest => <div key={dbtest.id}>
-          {dbtest.id}:{dbtest.name}
+          {dbtest.id}:{dbtest.name}s
           <button onClick={(e) => updateTask(e)}> mod </button>
           <button onClick={() => deleteTask(dbtest.id)}> del </button>
         </div>) : 'There is no sslist data available'}
