@@ -58,7 +58,7 @@ export default function SsList() {
     e.preventDefault();
     try {
       const body = { name: "testName!" };
-      const response = await fetch("http://localhost:3001/sslist", {
+      const response = await fetch("http://localhost:5000/sslist", {
         method: "POST",
         headers: { "Content-Type": "application/json"},
         body: JSON.stringify(body)
@@ -73,7 +73,7 @@ export default function SsList() {
 
   const getTasks = async() => {
     try {
-      const response = await fetch("http://localhost:3001/sslist")
+      const response = await fetch("http://localhost:5000/sslist")
       const jsonData = await response.json()
 
       setDbtest(jsonData);
@@ -85,7 +85,7 @@ export default function SsList() {
 
   const deleteTask = async (id) => {
     try {
-      const deleteTask = await fetch(`http://localhost:3001/sslist/${id}`, {
+      const deleteTask = await fetch(`http://localhost:5000/sslist/${id}`, {
         method: "DELETE"
       });
 
@@ -102,7 +102,7 @@ export default function SsList() {
     e.preventDefault();
     try {
       const body = { name : "updateName"};
-      const response = await fetch(`http://localhost:3001/sslist/2`,{
+      const response = await fetch(`http://localhost:5000/sslist/2`,{
         method: "PUT",
         headers: { "Content-Type": "application/json"},
         body: JSON.stringify(body)
@@ -121,7 +121,7 @@ export default function SsList() {
   
   console.log(dbtest);
   // function getMerchant() {
-    //   fetch('http://localhost:3001')
+    //   fetch('http://localhost:5000')
     //     .then(response => {
       //       return response.text();
       //     })
@@ -131,7 +131,7 @@ export default function SsList() {
   // }
   // function createMerchant() {
   //   let name = prompt('Enter name');
-  //   fetch('http://localhost:3001/sslistInsert', {
+  //   fetch('http://localhost:5000/sslistInsert', {
   //     method: 'POST',
   //     headers: {
   //       'Content-Type': 'application/json',
@@ -147,7 +147,7 @@ export default function SsList() {
 
   // function deleteMerchant() {
   //   let id = prompt('Enter merchant id');
-  //   fetch(`http://localhost:3001/sslistDelete/${id}`, {
+  //   fetch(`http://localhost:5000/sslistDelete/${id}`, {
   //     method: 'DELETE',
   //   })
   //     .then(response => {
