@@ -10,12 +10,7 @@
     {
       "src": "trnLogo.png",
       "type": "image/png",
-      "sizes": "192x192"
-    },
-    {
-      "src": "trnLogo.png",
-      "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "97x75"
     }
   ],
   "start_url": ".",
