@@ -58,7 +58,7 @@ export default function SsList() {
     e.preventDefault();
     try {
       const body = { name: "testName!" };
-      const response = await fetch("http://localhost:5000/sslist", {
+      const response = await fetch("http://localhost:5000/api/sslist", {
         method: "POST",
         headers: { "Content-Type": "application/json"},
         body: JSON.stringify(body)
@@ -73,7 +73,7 @@ export default function SsList() {
 
   const getTasks = async() => {
     try {
-      const response = await fetch("http://localhost:5000/sslist")
+      const response = await fetch("http://localhost:5000/api/sslist")
       const jsonData = await response.json()
 
       setDbtest(jsonData);
@@ -85,7 +85,7 @@ export default function SsList() {
 
   const deleteTask = async (id) => {
     try {
-      const deleteTask = await fetch(`http://localhost:5000/sslist/${id}`, {
+      const deleteTask = await fetch(`http://localhost:5000/api/sslist/${id}`, {
         method: "DELETE"
       });
 
@@ -102,7 +102,7 @@ export default function SsList() {
     e.preventDefault();
     try {
       const body = { name : "updateName"};
-      const response = await fetch(`http://localhost:5000/sslist/2`,{
+      const response = await fetch(`http://localhost:5000/api/sslist/22`,{
         method: "PUT",
         headers: { "Content-Type": "application/json"},
         body: JSON.stringify(body)
@@ -394,7 +394,7 @@ export default function SsList() {
                               className="px-3 py-3 placeholder-slate-300
                               text-slate-600 relative bg-white rounded text-sm border-0 shadow outline-none
                               focus:outline-none focus:ring w-full"
-                              value={selectedTask.ssTitle} />
+                              value={selectedTask.ssTitle} readOnly/>
                           </div>
                           <div className="mb-4">
                             <label className="text-sm text-gray-700 dark:text-gray-200" htmlFor="ssContent">内容</label>
@@ -402,7 +402,7 @@ export default function SsList() {
                               className="px-3 py-3 placeholder-slate-300
                               text-slate-600 relative bg-white rounded text-sm border-0 shadow outline-none
                               focus:outline-none focus:ring w-full"
-                              value={selectedTask.ssContent} />
+                              value={selectedTask.ssContent} readOnly/>
                           </div>
                       </div>
                       {/*footer*/}
