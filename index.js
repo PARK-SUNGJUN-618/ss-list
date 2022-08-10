@@ -12,7 +12,7 @@ app.use('/api/data', function(req, res) {
   res.json({ greeting: 'Hello World' });
 });
 
-app.use(express.static(path.join(__dirname, './client/build')));
+app.use(express.static(path.join(__dirname, 'client/build')));
 
 if (process.env.NODE_ENV === "production") {
   // 리액트 정적 파일 제공
