@@ -54,15 +54,15 @@ export default function SsList() {
   const [ssContent, setSsContent] = useState('');
   const [dbtest, setDbtest] = useState([]);
 
-  const getUrl = () => {
-    return process.env.NODE_ENV === 'production' ? "https://ss-list.herokuapp.com" : "http://localhost:5000";
-  }
+  // const getUrl = () => {
+  //   return process.env.NODE_ENV === 'production' ? "https://ss-list.herokuapp.com" : "http://localhost:5000";
+  // }
 
   const createTask = async e => {
     e.preventDefault();
     try {
       const body = { name: "testName!" };
-      const response = await fetch(getUrl() + "/api/sslist", {
+      const response = await fetch("/api/sslist", {
         method: "POST",
         headers: { "Content-Type": "application/json"},
         body: JSON.stringify(body)
@@ -77,7 +77,7 @@ export default function SsList() {
 
   const getTasks = async() => {
     try {
-      const response = await fetch(getUrl() + '/api/sslist')
+      const response = await fetch("/api/sslist")
       const jsonData = await response.json()
 
       setDbtest(jsonData);
@@ -89,7 +89,7 @@ export default function SsList() {
 
   const deleteTask = async (id) => {
     try {
-      const deleteTask = await fetch(getUrl() + `api/sslist/${id}`, {
+      const deleteTask = await fetch(`/api/sslist/${id}`, {
         method: "DELETE"
       });
 
@@ -106,7 +106,7 @@ export default function SsList() {
     e.preventDefault();
     try {
       const body = { name : "updateName"};
-      const response = await fetch(getUrl() + `/api/sslist/22`,{
+      const response = await fetch(`/api/sslist/22`,{
         method: "PUT",
         headers: { "Content-Type": "application/json"},
         body: JSON.stringify(body)
