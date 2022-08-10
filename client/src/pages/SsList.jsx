@@ -75,16 +75,24 @@ export default function SsList() {
     }
   }
 
-  const getTasks = async() => {
-    try {
-      const response = await fetch("/api/sslist")
-      const jsonData = await response.json()
+  // const getTasks = async() => {
+  //   try {
+  //     const response = await fetch("/api/sslist")
+  //     const jsonData = await response.json()
 
-      setDbtest(jsonData);
+  //     setDbtest(jsonData);
       
-    } catch (err) {
-      console.error(err.message);
-    }
+  //   } catch (err) {
+  //     console.error(err.message);
+  //   }
+  // }
+
+  async function getTasks() {
+    const res = await fetch("/api/sslist");
+
+    const taskArray = await res.json();
+
+    setDbtest(jsonData);
   }
 
   const deleteTask = async (id) => {
