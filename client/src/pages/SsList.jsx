@@ -92,7 +92,7 @@ export default function SsList() {
 
     const taskArray = await res.json();
 
-    setDbtest(jsonData);
+    setDbtest(taskArray);
   }
 
   const deleteTask = async (id) => {
