@@ -6,172 +6,14 @@ import logo from "../img/trnLogo.png";
 import SsListContent from '../components/SsListContent';
 
 export default function SsList() {
-  
-  const initialData = [
-    {
-      ssKey: 1,
-      ssTitle: 'オッケー',
-      ssContent: 'バナナ、肉',
-      ssCreateDate: new Date("2022-08-01 10:10:10"),
-      ssUpdateDate: new Date("2022-08-01 10:10:10"),
-      ssIsChecked: false,
-      ssIsDeleted: false,
-    },
-    {
-      ssKey: 2,
-      ssTitle: '土曜日に映画',
-      ssContent: 'アイアムサム',
-      ssCreateDate: new Date("2022-08-02 11:11:11"),
-      ssUpdateDate: new Date("2022-08-02 11:11:11"),
-      ssIsChecked: true,
-      ssIsDeleted: false,
-    },
-    {
-      ssKey: 3,
-      ssTitle: '勉強',
-      ssContent: '資格証',
-      ssCreateDate: new Date("2022-08-03 12:12:12"),
-      ssUpdateDate: new Date("2022-08-03 12:12:12"),
-      ssIsChecked: false,
-      ssIsDeleted: false,
-    },
-    {
-      ssKey: 4,
-      ssTitle: '韓ドラ見る',
-      ssContent: '愛の不時着',
-      ssCreateDate: new Date("2022-08-03 13:13:13"),
-      ssUpdateDate: new Date("2022-08-03 13:13:13"),
-      ssIsChecked: true,
-      ssIsDeleted: false,
-    },
-  ];
   const [selectedDate, setSelectedDate] = useState(new Date(new Date().setHours(0,0,0,0)));
   const [selectedTask, setSelectedTask] = useState({});
   const [showModalAddTask, setShowModalAddTask] = useState(false);
   const [showModalDetailedTask, setShowModalDetailedTask] = useState(false);
-  const [ssTasks, setSsTasks] = useState(initialData);
+  const [ssTasks, setSsTasks] = useState({});
   const [ssTitle, setSsTitle] = useState('');
   const [ssContent, setSsContent] = useState('');
-  const [dbtest, setDbtest] = useState([]);
-
-  // const getUrl = () => {
-  //   return process.env.NODE_ENV === 'production' ? "https://ss-list.herokuapp.com" : "http://localhost:5000";
-  // }
-
-  const createTask = async e => {
-    e.preventDefault();
-    try {
-      const body = { name: "testName!" };
-      const response = await fetch("/api/sslist", {
-        method: "POST",
-        headers: { "Content-Type": "application/json"},
-        body: JSON.stringify(body)
-      })
-
-      console.log(response);
-      getTasks();
-    } catch (err) {
-      console.error(err.message);
-    }
-  }
-
-  // const getTasks = async() => {
-  //   try {
-  //     const response = await fetch("/api/sslist")
-  //     const jsonData = await response.json()
-
-  //     setDbtest(jsonData);
-      
-  //   } catch (err) {
-  //     console.error(err.message);
-  //   }
-  // }
-
-  async function getTasks() {
-    const res = await fetch("/api/sslist");
-
-    const taskArray = await res.json();
-
-    setDbtest(taskArray);
-  }
-
-  const deleteTask = async (id) => {
-    try {
-      const deleteTask = await fetch(`/api/sslist/${id}`, {
-        method: "DELETE"
-      });
-
-      console.log(deleteTask)
-      // getTasks();
-      setDbtest(dbtest.filter(task => task.id !== id));
-
-    } catch (err) {
-      console.error(err.message);
-    }
-  }
-
-  const updateTask = async(e) => {
-    e.preventDefault();
-    try {
-      const body = { name : "updateName"};
-      const response = await fetch(`/api/sslist/22`,{
-        method: "PUT",
-        headers: { "Content-Type": "application/json"},
-        body: JSON.stringify(body)
-      })
-
-      getTasks();
-      console.log(response);
-    } catch (err) {
-      console.error(err.message);
-    }
-  }
   
-  useEffect(() => {
-    getTasks();
-    // eslint-disable-next-line react-hooks/exhaustive-deps 
-  }, []);
-  
-  console.log(dbtest);
-  // function getMerchant() {
-    //   fetch('http://localhost:5000')
-    //     .then(response => {
-      //       return response.text();
-      //     })
-  //     .then(data => {
-  //       setDbtest(data);
-  //     });
-  // }
-  // function createMerchant() {
-  //   let name = prompt('Enter name');
-  //   fetch('http://localhost:5000/sslistInsert', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify({name}),
-  //   }).then(response => {
-  //     return response.text();
-  //   }).then(data => {
-  //     alert(data);
-  //     getMerchant();
-  //   });
-  // }
-
-  // function deleteMerchant() {
-  //   let id = prompt('Enter merchant id');
-  //   fetch(`http://localhost:5000/sslistDelete/${id}`, {
-  //     method: 'DELETE',
-  //   })
-  //     .then(response => {
-  //       return response.text();
-  //     })
-  //     .then(data => {
-  //       alert(data);
-  //       getMerchant();
-  //     });
-  // }
-
   const dayIncrease = () => {
     setSelectedDate(addDays(selectedDate, 1));
   }
@@ -190,38 +32,54 @@ export default function SsList() {
     // console.log(event.target.value);
   }
 
-  const handleSubmitAddTask = (event) => {
-    setShowModalAddTask(false);
-    event.preventDefault()
-    console.log("handleSubmitAddTask:",ssTitle);
-    if(ssTitle === '') return;
-    // console.log({ ssTitle, ssContent, ssCreateDate: new Date(), ssIsChecked: false});
-    // console.log(...ssTasks);
-    setSsTasks([...ssTasks, { 
-      ssKey: ssTasks.length+1,
-      ssTitle,
-      ssContent,
-      ssCreateDate: new Date(),
-      ssUpdateDate: new Date(),
-      ssIsChecked: false,
-      ssIsDeleted: false,
-    }])
-    setSsTitle('');
-    setSsContent('');
+  async function getTasks() {
+    const res = await fetch("/api/sslist");
+
+    const taskArray = await res.json();
+
+    setSsTasks(taskArray);
   }
 
-  const handleRemoveTask = (ssKey) => {
-    console.log("handleRemoveTask:",ssKey)
-    const newSsTasks = ssTasks.map((ssTasks) => {
-      if (ssTasks.ssKey === ssKey) {
-        ssTasks.ssIsDeleted = !ssTasks.ssIsDeleted;
-        ssTasks.ssUpdateDate = new Date();
-        console.log(ssTasks.ssIsDeleted);
-      }
-      return ssTasks;
-    });
-    // const newSsTasks = [...ssTasks].filter((ssTasks) => ssTasks.ssKey !== ssKey);
-    setSsTasks(newSsTasks);
+  const handleSubmitAddTask = async e => {
+    e.preventDefault();
+    if(ssTitle === '') return;
+    try {
+      const body = { 
+        ssTitle,
+        ssContent,
+        ssCreateDate: new Date(),
+        ssUpdateDate: new Date(),
+        ssIsChecked: false,
+        ssIsDeleted: false,
+      };
+      const response = await fetch("/api/sslist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json"},
+        body: JSON.stringify(body)
+      })
+
+      console.log(response);
+      setSsTitle('');
+      setSsContent('');
+      getTasks();
+    } catch (err) {
+      console.error(err.message);
+    }
+  }
+
+  const handleRemoveTask = async (ssKey) => {
+    try {
+      const deleteTask = await fetch(`/api/sslist/${ssKey}`, {
+        method: "DELETE"
+      });
+
+      console.log(deleteTask)
+      // getTasks();
+      setSsTasks(ssTasks.filter(task => task.ssKey !== ssKey));
+
+    } catch (err) {
+      console.error(err.message);
+    }
   }
 
   const handleDetailedTask = (task) => {
@@ -230,36 +88,33 @@ export default function SsList() {
     setSelectedTask(task);
   }
 
-  const handleCheckedTask = (ssKey) => {
-    console.log("handleCheckedTask:",ssKey)
-    const newSsTasks = ssTasks.map((ssTasks) => {
-      if (ssTasks.ssKey === ssKey) {
-        ssTasks.ssIsChecked = !ssTasks.ssIsChecked;
-        ssTasks.ssUpdateDate = new Date();
-        console.log(ssTasks.ssUpdateDate);
-      }
-      return ssTasks;
-    });
-    setSsTasks(newSsTasks);
-  };
+  const handleCheckedTask = async(data) => {
+    try {
+      const body = {
+        ssIsChecked: !data.ssIsChecked,
+        ssUpdateDate: new Date()
+      };
+      const response = await fetch(`/api/sslist/${data.ssKey}`,{
+        method: "PUT",
+        headers: { "Content-Type": "application/json"},
+        body: JSON.stringify(body)
+      })
+
+      getTasks();
+      console.log(response);
+    } catch (err) {
+      console.error(err.message);
+    }
+  }
 
   useEffect(() => {
-    console.log(selectedDate);
-    console.log(ssTasks);
-  }, [selectedDate, ssTasks]);
+    getTasks();
+    // eslint-disable-next-line react-hooks/exhaustive-deps 
+  }, []);
   
 
   return (
     <>
-      <div>
-        {dbtest ? dbtest.map(dbtest => <div key={dbtest.id}>
-          {dbtest.id}:{dbtest.name}s
-          <button onClick={(e) => updateTask(e)}> mod </button>
-          <button onClick={() => deleteTask(dbtest.id)}> del </button>
-        </div>) : 'There is no sslist data available'}
-        <button onClick={createTask}>Add Task</button>
-        {/* <button onClick={deleteMerchant}>Delete merchant</button> */}
-      </div>
       <div className="w-screen h-screen bg-zinc-200 bg-dot_pattern bg-[length:30px_30px] ">
         <NewLine />
         <div className="grid grid-cols-3 justify-between items-center">

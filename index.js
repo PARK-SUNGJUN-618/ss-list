@@ -27,10 +27,10 @@ if (process.env.NODE_ENV === "production") {
 
 //create a task
 app.post("/api/sslist", async (req, res) => {
-  const { name } = req.body;
+  const { ssTitle, ssContent, ssCreateDate, ssUpdateDate, ssIsChecked, ssIsDeleted } = req.body;
   const newTask = await pool.query(
-    "INSERT INTO test_tbl (name) VALUES ($1) RETURNING *",
-    [name]
+    "INSERT INTO tbl_sslist (ssTitle, ssContent, ssCreateDate, ssUpdateDate, ssIsChecked, ssIsDeleted) VALUES ($1,$2,$3,$4,$5,$6) RETURNING *",
+    [ssTitle, ssContent, ssCreateDate, ssUpdateDate, ssIsChecked, ssIsDeleted]
   );
   res.json(newTask.rows[0]);
 })
@@ -38,7 +38,9 @@ app.post("/api/sslist", async (req, res) => {
 // get all tasks
 app.get("/api/sslist", async(req, res) => {
   try {
-    const allTasks = await pool.query("SELECT * from test_tbl");
+    const allTasks = await pool.query(
+      "SELECT * from tbl_sslist"
+    );
     
     res.json(allTasks.rows);
   } catch (err) {
@@ -47,10 +49,10 @@ app.get("/api/sslist", async(req, res) => {
 })
 
 //get a task
-app.get("/api/sslist/:id", async(req, res) => {
+app.get("/api/sslist/:ssKey", async(req, res) => {
   try {
-    const { id } = req.params;
-    const task = await pool.query("SELECT * FROM test_tbl WHERE id = $1", [id])
+    const { ssKey } = req.params;
+    const task = await pool.query("SELECT * FROM tbl_sslist WHERE ssKey = $1", [ssKey])
     
     res.json(task.rows[0]);
   } catch (error) {
@@ -59,11 +61,12 @@ app.get("/api/sslist/:id", async(req, res) => {
 })
 
 //update a task
-app.put("/api/sslist/:id", async(req, res) => {
+app.put("/api/sslist/:ssKey", async(req, res) => {
   try {
-    const { id } = req.params;
-    const { name } = req.body;
-    const updateTask = await pool.query("UPDATE test_tbl SET name = $1 WHERE id = $2", [name, id])
+    const { ssKey } = req.params;
+    const { ssIsChecked, ssUpdateDate } = req.body;
+    const updateTask = await pool.query("UPDATE tbl_sslist SET ssIsChecked = $1, ssUpdateDate = $2 WHERE ssKey = $3",
+    [ssIsChecked, ssUpdateDate, ssKey])
 
     res.json("Task was updated!")
   } catch (error) {
@@ -72,10 +75,10 @@ app.put("/api/sslist/:id", async(req, res) => {
 })
 
 //delete a task
-app.delete("/api/sslist/:id", async(req, res) => {
+app.delete("/api/sslist/:ssKey", async(req, res) => {
   try {
-    const { id } = req.params;
-    const deleteTask = await pool.query("DELETE FROM test_tbl WHERE id = $1", [id])
+    const { ssKey } = req.params;
+    const deleteTask = await pool.query("DELETE FROM tbl_sslist WHERE ssKey = $1", [ssKey])
 
     res.json("Task was deleted!")
   } catch (error) {
