@@ -19,10 +19,10 @@ if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, 'client/build')));
 
   // 라우트 설정
-  app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname+'/client/build/index.html'));
-  });
 }
+// app.get('*', (req, res) => {
+//   res.sendFile(path.resolve(__dirname+'/client/build/index.html'));
+// });
 // console.log(`server running at http ${port}`);
 
 //create a task
