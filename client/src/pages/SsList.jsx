@@ -194,21 +194,20 @@ export default function SsList() {
                             <label className="text-sm text-gray-700 dark:text-gray-700" htmlFor="ssTitle">タイトル</label>
                             <input type="text" placeholder="Title" id="ssTitle"
                               className="px-3 py-3 placeholder-slate-300
-                              text-slate-600 relative bg-white rounded text-sm border-0 shadow outline-none
+                              text-slate-600 relative bg-white rounded text-sm border border-zinc-400 shadow outline-none
                               focus:outline-none focus:ring w-full"
                               value={ssTitle} onChange={handleSsTitle} />
                           </div>
                           <div className="mb-4">
                             <label className="text-sm text-gray-700 dark:text-gray-700" htmlFor="ssContent">内容</label>
                             <textarea id="ssContent" className="px-3 py-3 h-36 placeholder-slate-300
-                              text-slate-600 relative bg-white rounded text-sm border-0 shadow outline-none
+                              text-slate-600 relative bg-white rounded text-sm border border-zinc-400 shadow outline-none
                               focus:outline-none focus:ring w-full resize-none" onChange={handleSsContent}
-                            >
-                              {ssContent}
-                            </textarea>
+                              value={ssContent} placeholder="Content"
+                            ></textarea>
                             {/* <input type="text" placeholder="Content" id="ssContent"
                               className="px-3 py-3 placeholder-slate-300
-                              text-slate-600 relative bg-white rounded text-sm border-0 shadow outline-none
+                              text-slate-600 relative bg-white rounded text-sm border border-zinc-400 shadow outline-none
                               focus:outline-none focus:ring w-full"
                               value={ssContent} onChange={handleSsContent} /> */}
                           </div>
@@ -293,7 +292,7 @@ export default function SsList() {
                             <label className="text-sm text-gray-700 dark:text-gray-700" htmlFor="ssCreateDate">登録日時</label>
                             <input type="text" placeholder="CreateDate" id="ssCreateDate"
                               className="px-3 py-3 placeholder-slate-300
-                              text-slate-600 relative bg-white rounded text-sm border-0 shadow outline-none
+                              text-slate-600 relative bg-white rounded text-sm border border-zinc-400 shadow outline-none
                               focus:outline-none focus:ring w-full"
                               value={format(selectedTask.ssCreateDate, "yyyy年 MM月 dd日")} readOnly/>
                           </div>
@@ -301,21 +300,20 @@ export default function SsList() {
                             <label className="text-sm text-gray-700 dark:text-gray-700" htmlFor="ssTitle">タイトル</label>
                             <input type="text" placeholder="Title" id="ssTitle"
                               className="px-3 py-3 placeholder-slate-300
-                              text-slate-600 relative bg-white rounded text-sm border-0 shadow outline-none
+                              text-slate-600 relative bg-white rounded text-sm border border-zinc-400 shadow outline-none
                               focus:outline-none focus:ring w-full"
                               value={selectedTask.ssTitle} readOnly/>
                           </div>
                           <div className="mb-4">
                             <label className="text-sm text-gray-700 dark:text-gray-700" htmlFor="ssContent">内容</label>
                             <textarea id="ssContent" className="px-3 py-3 h-36 placeholder-slate-300
-                              text-slate-600 relative bg-white rounded text-sm border-0 shadow outline-none
-                              focus:outline-none focus:ring w-full resize-none" onChange={handleSsContent} readOnly
-                            >
-                              {selectedTask.ssContent}
-                            </textarea>
+                              text-slate-600 relative bg-white rounded text-sm border border-zinc-400 shadow outline-none
+                              focus:outline-none focus:ring w-full resize-none"
+                              onChange={handleSsContent} value={selectedTask.ssContent} readOnly
+                            ></textarea>
                             {/* <input type="text" placeholder="Content" id="ssContent"
                               className="px-3 py-3 placeholder-slate-300
-                              text-slate-600 relative bg-white rounded text-sm border-0 shadow outline-none
+                              text-slate-600 relative bg-white rounded text-sm border border-zinc-400 shadow outline-none
                               focus:outline-none focus:ring w-full"
                               value={selectedTask.ssContent} readOnly/> */}
                           </div>
