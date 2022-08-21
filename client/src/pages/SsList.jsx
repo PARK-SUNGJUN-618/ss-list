@@ -98,6 +98,18 @@ export default function SsList() {
   }
 
   const handleCheckedTask = async(data) => {
+    const taskArray = ssTasks.map((task) => {
+      if(data.ssKey === task.ssKey) {
+        return {
+          ...task,
+          ssIsChecked: !data.ssIsChecked,
+          ssUpdateDate: new Date()
+        }
+      } else {
+        return task;
+      }
+    })
+    setSsTasks(taskArray);
     try {
       const body = {
         ssIsChecked: !data.ssIsChecked,
@@ -109,7 +121,7 @@ export default function SsList() {
         body: JSON.stringify(body)
       })
 
-      getTasks();
+      // getTasks();
       console.log(response);
     } catch (err) {
       console.error(err.message);
