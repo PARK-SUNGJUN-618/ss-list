@@ -10,7 +10,7 @@ export default function SsList() {
   const [selectedTask, setSelectedTask] = useState({});
   const [showModalAddTask, setShowModalAddTask] = useState(false);
   const [showModalDetailedTask, setShowModalDetailedTask] = useState(false);
-  const [ssTasks, setSsTasks] = useState({});
+  const [ssTasks, setSsTasks] = useState([]);
   const [ssTitle, setSsTitle] = useState('');
   const [ssContent, setSsContent] = useState('');
   
@@ -35,7 +35,15 @@ export default function SsList() {
   async function getTasks() {
     const res = await fetch("/api/sslist");
 
-    const taskArray = await res.json();
+    const taskArrayJson = await res.json();
+
+    const taskArray = taskArrayJson.map((task) => {
+      return {
+        ...task,
+        ssCreateDate: new Date(task.ssCreateDate),
+        ssUpdateDate: new Date(task.ssUpdateDate)
+      }
+    })
 
     setSsTasks(taskArray);
   }
@@ -61,6 +69,7 @@ export default function SsList() {
       console.log(response);
       setSsTitle('');
       setSsContent('');
+      setShowModalAddTask(false);
       getTasks();
     } catch (err) {
       console.error(err.message);
@@ -112,6 +121,9 @@ export default function SsList() {
     // eslint-disable-next-line react-hooks/exhaustive-deps 
   }, []);
   
+  useEffect(() => {
+    console.log(ssTasks)
+  }, [ssTasks]);
 
   return (
     <>

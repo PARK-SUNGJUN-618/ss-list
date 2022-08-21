@@ -39,9 +39,10 @@ app.post("/api/sslist", async (req, res) => {
 app.get("/api/sslist", async(req, res) => {
   try {
     const allTasks = await pool.query(
-      "SELECT * from tbl_sslist"
+      `SELECT sskey "ssKey", sstitle "ssTitle", sscontent "ssContent", date_trunc('second',sscreatedate) "ssCreateDate", date_trunc('second',ssupdatedate) "ssUpdateDate", ssischecked "ssIsChecked", ssisdeleted "ssIsDeleted" from tbl_sslist`
     );
     
+    // console.log("here!!:",allTasks)
     res.json(allTasks.rows);
   } catch (err) {
     console.error(err.message);
