@@ -52,6 +52,7 @@ export default function SsList() {
     e.preventDefault();
     if(ssTitle === '') return;
     try {
+      setShowModalAddTask(false);
       const body = { 
         ssTitle,
         ssContent,
@@ -62,14 +63,13 @@ export default function SsList() {
       };
       const response = await fetch("/api/sslist", {
         method: "POST",
-        headers: { "Content-Type": "application/json"},
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body)
       })
 
       console.log(response);
       setSsTitle('');
       setSsContent('');
-      setShowModalAddTask(false);
       getTasks();
     } catch (err) {
       console.error(err.message);
