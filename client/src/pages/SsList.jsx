@@ -4,6 +4,9 @@ import NewLine from "../components/NewLine";
 import Datepicker from "../components/Datepicker";
 import logo from "../img/trnLogo.png";
 import SsListContent from '../components/SsListContent';
+import {
+  format
+} from "date-fns";
 
 export default function SsList() {
   const [selectedDate, setSelectedDate] = useState(new Date(new Date().setHours(0,0,0,0)));
@@ -188,7 +191,7 @@ export default function SsList() {
                       {/*body*/}
                       <div className="relative p-6 flex-auto">
                           <div className="mb-4">
-                            <label className="text-sm text-gray-700 dark:text-gray-200" htmlFor="ssTitle">タイトル</label>
+                            <label className="text-sm text-gray-700 dark:text-gray-700" htmlFor="ssTitle">タイトル</label>
                             <input type="text" placeholder="Title" id="ssTitle"
                               className="px-3 py-3 placeholder-slate-300
                               text-slate-600 relative bg-white rounded text-sm border-0 shadow outline-none
@@ -196,12 +199,18 @@ export default function SsList() {
                               value={ssTitle} onChange={handleSsTitle} />
                           </div>
                           <div className="mb-4">
-                            <label className="text-sm text-gray-700 dark:text-gray-200" htmlFor="ssContent">内容</label>
-                            <input type="text" placeholder="Content" id="ssContent"
+                            <label className="text-sm text-gray-700 dark:text-gray-700" htmlFor="ssContent">内容</label>
+                            <textarea id="ssContent" className="px-3 py-3 h-36 placeholder-slate-300
+                              text-slate-600 relative bg-white rounded text-sm border-0 shadow outline-none
+                              focus:outline-none focus:ring w-full resize-none" onChange={handleSsContent}
+                            >
+                              {ssContent}
+                            </textarea>
+                            {/* <input type="text" placeholder="Content" id="ssContent"
                               className="px-3 py-3 placeholder-slate-300
                               text-slate-600 relative bg-white rounded text-sm border-0 shadow outline-none
                               focus:outline-none focus:ring w-full"
-                              value={ssContent} onChange={handleSsContent} />
+                              value={ssContent} onChange={handleSsContent} /> */}
                           </div>
                       </div>
                       {/*footer*/}
@@ -280,8 +289,16 @@ export default function SsList() {
                       </div>
                       {/*body*/}
                       <div className="relative p-6 flex-auto">
+                        <div className="mb-4">
+                            <label className="text-sm text-gray-700 dark:text-gray-700" htmlFor="ssCreateDate">登録日時</label>
+                            <input type="text" placeholder="CreateDate" id="ssCreateDate"
+                              className="px-3 py-3 placeholder-slate-300
+                              text-slate-600 relative bg-white rounded text-sm border-0 shadow outline-none
+                              focus:outline-none focus:ring w-full"
+                              value={format(selectedTask.ssCreateDate, "yyyy年 MM月 dd日")} readOnly/>
+                          </div>
                           <div className="mb-4">
-                            <label className="text-sm text-gray-700 dark:text-gray-200" htmlFor="ssTitle">タイトル</label>
+                            <label className="text-sm text-gray-700 dark:text-gray-700" htmlFor="ssTitle">タイトル</label>
                             <input type="text" placeholder="Title" id="ssTitle"
                               className="px-3 py-3 placeholder-slate-300
                               text-slate-600 relative bg-white rounded text-sm border-0 shadow outline-none
@@ -289,12 +306,18 @@ export default function SsList() {
                               value={selectedTask.ssTitle} readOnly/>
                           </div>
                           <div className="mb-4">
-                            <label className="text-sm text-gray-700 dark:text-gray-200" htmlFor="ssContent">内容</label>
-                            <input type="text" placeholder="Content" id="ssContent"
+                            <label className="text-sm text-gray-700 dark:text-gray-700" htmlFor="ssContent">内容</label>
+                            <textarea id="ssContent" className="px-3 py-3 h-36 placeholder-slate-300
+                              text-slate-600 relative bg-white rounded text-sm border-0 shadow outline-none
+                              focus:outline-none focus:ring w-full resize-none" onChange={handleSsContent} readOnly
+                            >
+                              {selectedTask.ssContent}
+                            </textarea>
+                            {/* <input type="text" placeholder="Content" id="ssContent"
                               className="px-3 py-3 placeholder-slate-300
                               text-slate-600 relative bg-white rounded text-sm border-0 shadow outline-none
                               focus:outline-none focus:ring w-full"
-                              value={selectedTask.ssContent} readOnly/>
+                              value={selectedTask.ssContent} readOnly/> */}
                           </div>
                       </div>
                       {/*footer*/}
@@ -306,13 +329,13 @@ export default function SsList() {
                         >
                           Close
                         </button>
-                        <button
+                        {/* <button
                           className="bg-zinc-500 text-white active:bg-zinc-600 font-bold uppercase text-sm px-6 py-3 rounded shadow active:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                           type="submit"
                           onClick={handleSubmitAddTask}
                         >
                           Save Changes
-                        </button>
+                        </button> */}
                       </div>
                     </div>
                   </div>

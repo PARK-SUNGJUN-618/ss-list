@@ -25,7 +25,7 @@ export default function SsListContent({ssTasks, handleRemoveTask, handleCheckedT
           </div>
           <div className={"col-span-7 ml-1 break-all border-b-2 border-zinc-400 " + (data.ssIsChecked ? 'line-through text-zinc-400' : '')}
             onClick={() => handleDetailedTask(data)}>
-            {data.ssTitle}：{data.ssContent}
+            {data.ssTitle}
           </div>
         {/* </div> */}
         <div className="col-span-1">
