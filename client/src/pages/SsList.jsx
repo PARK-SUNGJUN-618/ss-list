@@ -82,6 +82,19 @@ export default function SsList() {
   const handleSubmitChangeTask = async e => {
     e.preventDefault();
     if(ssTitle === '') return;
+    const taskArray = ssTasks.map((task) => {
+      if(selectedTask.ssKey === task.ssKey) {
+        return {
+          ...task,
+          ssTitle: ssTitle,
+          ssContent: ssContent,
+          ssUpdateDate: new Date()
+        }
+      } else {
+        return task;
+      }
+    })
+    setSsTasks(taskArray);
     try {
       setShowModalDetailedTask(false);
       const body = { 
@@ -89,7 +102,6 @@ export default function SsList() {
         ssContent,
         ssUpdateDate: new Date(),
       };
-
       const response = await fetch(`/api/changeSslist/${selectedTask.ssKey}`,{
         method: "PUT",
         headers: { "Content-Type": "application/json"},
@@ -240,16 +252,17 @@ export default function SsList() {
                           </div>
                       </div>
                       {/*footer*/}
-                      <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
+                      <div className="flex items-center justify-between p-6 border-t border-solid border-slate-200 rounded-b">
                         <button
-                          className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                          className="w-1/2 text-red-500 border border-red-500 rounded background-transparent font-bold uppercase px-6 py-3 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear
+                            transition-all duration-150 "
                           type="button"
                           onClick={() => setShowModalAddTask(false)}
                         >
                           Close
                         </button>
                         <button
-                          className="bg-zinc-500 text-white active:bg-zinc-600 font-bold uppercase text-sm px-6 py-3 rounded shadow active:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                          className="w-1/2 bg-zinc-500 text-white active:bg-zinc-600 font-bold uppercase text-sm px-6 py-3 rounded shadow active:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                           type="submit"
                           onClick={handleSubmitAddTask}
                         >
@@ -348,20 +361,20 @@ export default function SsList() {
                           </div>
                       </div>
                       {/*footer*/}
-                      <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
+                      <div className="flex items-center justify-between p-6 border-t border-solid border-slate-200 rounded-b">
                         <button
-                          className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                          className="w-1/2 text-red-500 border border-red-500 rounded background-transparent font-bold uppercase px-6 py-3 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                           type="button"
                           onClick={() => setShowModalDetailedTask(false)}
                         >
                           Close
                         </button>
                         <button
-                          className="bg-zinc-500 text-white active:bg-zinc-600 font-bold uppercase text-sm px-6 py-3 rounded shadow active:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                          className="w-1/2 bg-zinc-500 text-white active:bg-zinc-600 font-bold uppercase text-sm px-6 py-3 rounded shadow active:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                           type="submit"
                           onClick={handleSubmitChangeTask}
                         >
-                          Change SSList
+                          Change List
                         </button>
                       </div>
                     </div>
