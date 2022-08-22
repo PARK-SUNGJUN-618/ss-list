@@ -266,7 +266,7 @@ export default function SsList() {
                           type="submit"
                           onClick={handleSubmitAddTask}
                         >
-                          Add SSList
+                          Add
                         </button>
                       </div>
                     </div>
@@ -374,7 +374,7 @@ export default function SsList() {
                           type="submit"
                           onClick={handleSubmitChangeTask}
                         >
-                          Change List
+                          Change
                         </button>
                       </div>
                     </div>
