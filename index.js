@@ -61,13 +61,27 @@ app.get("/api/sslist/:ssKey", async(req, res) => {
   }
 })
 
-//update a task
+//checked a task
 app.put("/api/sslist/:ssKey", async(req, res) => {
   try {
     const { ssKey } = req.params;
     const { ssIsChecked, ssUpdateDate } = req.body;
     const updateTask = await pool.query("UPDATE tbl_sslist SET ssIsChecked = $1, ssUpdateDate = $2 WHERE ssKey = $3",
     [ssIsChecked, ssUpdateDate, ssKey])
+
+    res.json("Task was checked!")
+  } catch (error) {
+    console.error(err.message);
+  }
+})
+
+//update a task
+app.put("/api/changeSslist/:ssKey", async(req, res) => {
+  try {
+    const { ssKey } = req.params;
+    const { ssTitle, ssContent, ssUpdateDate } = req.body;
+    const updateTask = await pool.query("UPDATE tbl_sslist SET ssTitle = $1, ssContent = $2, ssUpdateDate = $3 WHERE ssKey = $4",
+    [ssTitle, ssContent, ssUpdateDate, ssKey])
 
     res.json("Task was updated!")
   } catch (error) {

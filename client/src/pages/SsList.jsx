@@ -79,6 +79,31 @@ export default function SsList() {
     }
   }
 
+  const handleSubmitChangeTask = async e => {
+    e.preventDefault();
+    if(ssTitle === '') return;
+    try {
+      setShowModalDetailedTask(false);
+      const body = { 
+        ssTitle,
+        ssContent,
+        ssUpdateDate: new Date(),
+      };
+
+      const response = await fetch(`/api/changeSslist/${selectedTask.ssKey}`,{
+        method: "PUT",
+        headers: { "Content-Type": "application/json"},
+        body: JSON.stringify(body)
+      })
+
+      console.log(response);
+
+      getTasks();
+    } catch (err) {
+      console.error(err.message);
+    }
+  }
+
   const handleRemoveTask = async (ssKey) => {
     try {
       const deleteTask = await fetch(`/api/sslist/${ssKey}`, {
@@ -98,6 +123,8 @@ export default function SsList() {
     console.log("showModalDetailedTask:",task);
     setShowModalDetailedTask(true);
     setSelectedTask(task);
+    setSsTitle(task.ssTitle);
+    setSsContent(task.ssContent);
   }
 
   const handleCheckedTask = async(data) => {
@@ -161,7 +188,7 @@ export default function SsList() {
           </div>
           <div className="justify-self-end text-3xl font-bold">
             <button className="active:bg-zinc-300 p-2 rounded-full mr-3"
-              onClick={() => setShowModalAddTask(true)}>
+              onClick={() => {setShowModalAddTask(true);setSsTitle('');setSsContent('');}}>
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
               </svg>
@@ -180,10 +207,10 @@ export default function SsList() {
                           List追加
                         </h3>
                         <button
-                          className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
+                          className="p-1 ml-auto bg-transparent border-0 text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
                           onClick={() => setShowModalAddTask(false)}
                         >
-                          <span className="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none">
+                          <span className="bg-transparent text-black h-6 w-6 text-2xl block outline-none focus:outline-none">
                             ×
                           </span>
                         </button>
@@ -226,7 +253,7 @@ export default function SsList() {
                           type="submit"
                           onClick={handleSubmitAddTask}
                         >
-                          Save Changes
+                          Add SSList
                         </button>
                       </div>
                     </div>
@@ -278,10 +305,10 @@ export default function SsList() {
                           List詳細
                         </h3>
                         <button
-                          className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
+                          className="p-1 ml-auto bg-transparent border-0 text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
                           onClick={() => setShowModalDetailedTask(false)}
                         >
-                          <span className="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none">
+                          <span className="bg-transparent text-black h-6 w-6 text-2xl block outline-none focus:outline-none">
                             ×
                           </span>
                         </button>
@@ -302,14 +329,16 @@ export default function SsList() {
                               className="px-3 py-3 placeholder-slate-300
                               text-slate-600 relative bg-white rounded text-sm border border-zinc-400 shadow outline-none
                               focus:outline-none focus:ring w-full"
-                              value={selectedTask.ssTitle} readOnly/>
+                              value={ssTitle}
+                              onChange={handleSsTitle}
+                            />
                           </div>
                           <div className="mb-4">
                             <label className="text-sm text-gray-700 dark:text-gray-700" htmlFor="ssContent">内容</label>
                             <textarea id="ssContent" className="px-3 py-3 h-36 placeholder-slate-300
                               text-slate-600 relative bg-white rounded text-sm border border-zinc-400 shadow outline-none
                               focus:outline-none focus:ring w-full resize-none"
-                              onChange={handleSsContent} value={selectedTask.ssContent} readOnly
+                              onChange={handleSsContent} value={ssContent}
                             ></textarea>
                             {/* <input type="text" placeholder="Content" id="ssContent"
                               className="px-3 py-3 placeholder-slate-300
@@ -327,13 +356,13 @@ export default function SsList() {
                         >
                           Close
                         </button>
-                        {/* <button
+                        <button
                           className="bg-zinc-500 text-white active:bg-zinc-600 font-bold uppercase text-sm px-6 py-3 rounded shadow active:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                           type="submit"
-                          onClick={handleSubmitAddTask}
+                          onClick={handleSubmitChangeTask}
                         >
-                          Save Changes
-                        </button> */}
+                          Change SSList
+                        </button>
                       </div>
                     </div>
                   </div>
