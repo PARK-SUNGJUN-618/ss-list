@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Main from './pages/Main';
 import NotFound from './pages/NotFound';
 import SsList from './pages/SsList';
+import Motion from './pages/Motion';
 
 export default function App() {
   return (
@@ -10,6 +11,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Main />}></Route>
           <Route path="/ssList/*" element={<SsList />}></Route>
+          <Route path="/motion/*" element={<Motion />}></Route>
           <Route path="*" element={<NotFound />}></Route>
         </Routes>
       </BrowserRouter>
