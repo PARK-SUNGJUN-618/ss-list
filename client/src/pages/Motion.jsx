@@ -1,23 +1,39 @@
-import { useRef, useEffect } from 'react';
-import { motion, useTime , useMotionValue ,useMotionTemplate } from "framer-motion"
+import { useState, useEffect } from 'react';
+import { motion } from "framer-motion"
 
+let speed = {x:2, y:2};
+const ballSize = 'w-[80px] h-[80px] ';
+const ballInitial = { 
+  x : Math.random() * (window.innerWidth - 80),
+  y : Math.random() * (window.innerHeight - 80)
+};
 export default function Motion() {
-  const x = useTime();
+  const [ball, setBall] = useState(ballInitial);
 
-  // transform.get() === transform(100px)
-  const transform = useMotionTemplate`x(${x})`
+  const onUpdate = () => {
+    if(ball.x <= 0 || ball.x >= window.innerWidth - 80) {
+      speed = {x:speed.x*-1, y:speed.y};
+    } 
+    if(ball.y <= 0 || ball.y >= window.innerHeight - 80) {
+      speed = {x:speed.x, y:speed.y*-1};
+    }
+    
+    setBall({x:ball.x+speed.x, y:ball.y+speed.y});
+  }
   
+  useEffect(() => {
+    onUpdate();
+  }, [])
+  
+
   return (
     <>
-      <div className="w-screen h-screen bg-zinc-200 bg-dot_pattern bg-[length:30px_30px] overflow-x-hidden">
-        <motion.div className="w-20 h-20 border border-red-700 bg-red-300 rounded-full"
-          // initial={{ x: 50 , y:100}}
-          // animate={{ x: "calc(100vw - 100%)", y:0 }}
-          // transformTemplate={template}
-          // transition={{repeat:Infinity}}
-          animate={{ transform }}
+      <div className="w-screen h-screen bg-zinc-200 bg-dot_pattern bg-[length:30px_30px] overflow-hidden">
+        <motion.div className={ballSize + "border border-zinc-700 bg-zinc-300 rounded-full"}
+          initial={{ x: ball.x, y:ball.y }}
+          animate={{ x: ball.x, y:ball.y }}
+          onUpdate={onUpdate}
         />
-
       </div>
     </>
   );
