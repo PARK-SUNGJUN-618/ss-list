@@ -334,7 +334,7 @@ export default function SsList() {
                               className="px-3 py-3 placeholder-slate-300
                               text-slate-600 relative bg-white rounded text-sm border border-zinc-400 shadow outline-none
                               focus:outline-none focus:ring w-full"
-                              value={format(selectedTask.ssCreateDate, "yyyy年 MM月 dd日 HH時 mm分")} readOnly/>
+                              value={format(selectedTask.ssCreateDate, "yyyy/MM/dd HH:mm")} readOnly/>
                           </div>
                           <div className="mb-4">
                             <label className="text-sm text-gray-700 dark:text-gray-700" htmlFor="ssTitle">タイトル</label>
