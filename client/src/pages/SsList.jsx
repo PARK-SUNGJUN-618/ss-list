@@ -16,6 +16,7 @@ export default function SsList() {
   const [ssTasks, setSsTasks] = useState([]);
   const [ssTitle, setSsTitle] = useState('');
   const [ssContent, setSsContent] = useState('');
+  const [ssPriority, setSsPriority] = useState(0);
   
   const dayIncrease = () => {
     setSelectedDate(addDays(selectedDate, 1));
@@ -32,6 +33,11 @@ export default function SsList() {
 
   const handleSsContent = (event) => {
     setSsContent(event.target.value);
+    // console.log(event.target.value);
+  }
+
+  const handleSsPriority = (event) => {
+    setSsPriority(event.target.value);
     // console.log(event.target.value);
   }
 
@@ -86,6 +92,7 @@ export default function SsList() {
           ...task,
           ssTitle: ssTitle,
           ssContent: ssContent,
+          ssPriority: ssPriority,
           ssUpdateDate: new Date()
         }
       } else {
@@ -98,6 +105,7 @@ export default function SsList() {
       const body = { 
         ssTitle,
         ssContent,
+        ssPriority,
         ssUpdateDate: new Date(),
       };
       const response = await fetch(`/api/changeSslist/${selectedTask.ssKey}`,{
@@ -115,7 +123,7 @@ export default function SsList() {
   }
 
   const handleRemoveTask = async (ssKey) => {
-    if(window.confirm("Really Wanna Delete?")) return;
+    if(!window.confirm("Really Wanna Delete?")) return;
     setSsTasks(ssTasks.filter(task => task.ssKey !== ssKey));
     try {
       const deleteTask = await fetch(`/api/sslist/${ssKey}`, {
@@ -136,6 +144,7 @@ export default function SsList() {
     setSelectedTask(task);
     setSsTitle(task.ssTitle);
     setSsContent(task.ssContent);
+    setSsPriority(task.ssPriority);
   }
 
   const handleCheckedTask = async(data) => {
@@ -174,9 +183,9 @@ export default function SsList() {
     // eslint-disable-next-line react-hooks/exhaustive-deps 
   }, []);
   
-  // useEffect(() => {
-  //   console.log(ssTasks)
-  // }, [ssTasks]);
+  useEffect(() => {
+    console.log(ssTasks)
+  }, [ssTasks]);
 
   return (
     <>
@@ -326,7 +335,8 @@ export default function SsList() {
                       </div>
                       {/*body*/}
                       <div className="relative p-6 flex-auto">
-                        <div className="mb-4">
+                        <div className="mb-4 grid grid-cols-8 gap-5">
+                          <div className="col-span-6">
                             <label className="text-sm text-gray-700 dark:text-gray-700" htmlFor="ssCreateDate">登録日時</label>
                             <input type="text" placeholder="CreateDate" id="ssCreateDate"
                               className="px-3 py-3 placeholder-slate-300
@@ -335,24 +345,34 @@ export default function SsList() {
                               value={format(selectedTask.ssCreateDate, "yyyy/MM/dd HH:mm")} readOnly
                             />
                           </div>
-                          <div className="mb-4">
-                            <label className="text-sm text-gray-700 dark:text-gray-700" htmlFor="ssTitle">タイトル</label>
-                            <input type="text" placeholder="Title" id="ssTitle"
+                          <div className="col-span-2">
+                            <label className="text-sm text-gray-700 dark:text-gray-700" htmlFor="ssCreateDate">優先度</label>
+                            <input type="number" placeholder="priority" id="ssPriority"
                               className="px-3 py-3 placeholder-slate-300
                               text-slate-600 relative bg-white rounded text-sm border border-zinc-400 shadow outline-none
                               focus:outline-none focus:ring w-full"
-                              value={ssTitle}
-                              onChange={handleSsTitle}
+                              onChange={handleSsPriority} value={ssPriority}
                             />
                           </div>
-                          <div className="mb-4">
-                            <label className="text-sm text-gray-700 dark:text-gray-700" htmlFor="ssContent">内容</label>
-                            <textarea id="ssContent" className="px-3 py-3 h-36 placeholder-slate-300
-                              text-slate-600 relative bg-white rounded text-sm border border-zinc-400 shadow outline-none
-                              focus:outline-none focus:ring w-full resize-none"
-                              onChange={handleSsContent} value={ssContent}
-                            ></textarea>
-                          </div>
+                        </div>
+                        <div className="mb-4">
+                          <label className="text-sm text-gray-700 dark:text-gray-700" htmlFor="ssTitle">タイトル</label>
+                          <input type="text" placeholder="Title" id="ssTitle"
+                            className="px-3 py-3 placeholder-slate-300
+                            text-slate-600 relative bg-white rounded text-sm border border-zinc-400 shadow outline-none
+                            focus:outline-none focus:ring w-full"
+                            onChange={handleSsTitle} value={ssTitle}
+                            
+                          />
+                        </div>
+                        <div className="mb-4">
+                          <label className="text-sm text-gray-700 dark:text-gray-700" htmlFor="ssContent">内容</label>
+                          <textarea id="ssContent" className="px-3 py-3 h-36 placeholder-slate-300
+                            text-slate-600 relative bg-white rounded text-sm border border-zinc-400 shadow outline-none
+                            focus:outline-none focus:ring w-full resize-none"
+                            onChange={handleSsContent} value={ssContent}
+                          ></textarea>
+                        </div>
                       </div>
                       {/*footer*/}
                       <div className="flex items-center justify-between p-6 border-t border-solid border-slate-200 rounded-b">

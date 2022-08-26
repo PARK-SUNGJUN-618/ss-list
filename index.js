@@ -39,7 +39,7 @@ app.post("/api/sslist", async (req, res) => {
 app.get("/api/sslist", async(req, res) => {
   try {
     const allTasks = await pool.query(
-      `SELECT sskey "ssKey", sstitle "ssTitle", sscontent "ssContent", date_trunc('second',sscreatedate) "ssCreateDate", date_trunc('second',ssupdatedate) "ssUpdateDate", ssischecked "ssIsChecked", ssisdeleted "ssIsDeleted" from tbl_sslist`
+      `SELECT sskey "ssKey", sstitle "ssTitle", sscontent "ssContent", date_trunc('second',sscreatedate) "ssCreateDate", date_trunc('second',ssupdatedate) "ssUpdateDate", ssischecked "ssIsChecked", ssisdeleted "ssIsDeleted", sspriority "ssPriority" from tbl_sslist`
     );
     
     // console.log("here!!:",allTasks)
@@ -79,9 +79,9 @@ app.put("/api/sslist/:ssKey", async(req, res) => {
 app.put("/api/changeSslist/:ssKey", async(req, res) => {
   try {
     const { ssKey } = req.params;
-    const { ssTitle, ssContent, ssUpdateDate } = req.body;
-    const updateTask = await pool.query("UPDATE tbl_sslist SET ssTitle = $1, ssContent = $2, ssUpdateDate = $3 WHERE ssKey = $4",
-    [ssTitle, ssContent, ssUpdateDate, ssKey])
+    const { ssTitle, ssContent, ssPriority, ssUpdateDate } = req.body;
+    const updateTask = await pool.query("UPDATE tbl_sslist SET ssTitle = $1, ssContent = $2, ssPriority = $3, ssUpdateDate = $4 WHERE ssKey = $5",
+    [ssTitle, ssContent, ssPriority, ssUpdateDate, ssKey])
 
     res.json("Task was updated!")
   } catch (error) {
