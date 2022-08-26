@@ -37,9 +37,7 @@ export default function SsList() {
 
   async function getTasks() {
     const res = await fetch("/api/sslist");
-
     const taskArrayJson = await res.json();
-
     const taskArray = taskArrayJson.map((task) => {
       return {
         ...task,
@@ -110,13 +108,15 @@ export default function SsList() {
 
       console.log(response);
 
-      getTasks();
+      // getTasks();
     } catch (err) {
       console.error(err.message);
     }
   }
 
   const handleRemoveTask = async (ssKey) => {
+    if(window.confirm("Really Wanna Delete?")) return;
+    setSsTasks(ssTasks.filter(task => task.ssKey !== ssKey));
     try {
       const deleteTask = await fetch(`/api/sslist/${ssKey}`, {
         method: "DELETE"
@@ -124,7 +124,6 @@ export default function SsList() {
 
       console.log(deleteTask)
       // getTasks();
-      setSsTasks(ssTasks.filter(task => task.ssKey !== ssKey));
 
     } catch (err) {
       console.error(err.message);
@@ -175,9 +174,9 @@ export default function SsList() {
     // eslint-disable-next-line react-hooks/exhaustive-deps 
   }, []);
   
-  useEffect(() => {
-    console.log(ssTasks)
-  }, [ssTasks]);
+  // useEffect(() => {
+  //   console.log(ssTasks)
+  // }, [ssTasks]);
 
   return (
     <>
@@ -185,22 +184,25 @@ export default function SsList() {
         <NewLine />
         <div className="grid grid-cols-3 justify-between items-center">
           <div className="justify-self-start text-3xl font-bold">
-            <button className="active:bg-zinc-300 p-2 rounded-full ml-3">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
+            <button className="active:bg-zinc-300 p-2 rounded-full ml-3"
+              onClick={() => window.location.replace("/")}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
               </svg>
             </button>
           </div>
           <div className="justify-self-center text-3xl font-black">
-            <button onClick={() => setSelectedDate(new Date(new Date().setHours(0,0,0,0)))}
-              className="flex">
+            <button className="flex"
+              onClick={() => setSelectedDate(new Date(new Date().setHours(0,0,0,0)))}
+            >
               <img src={logo} alt="" className="w-10 h-10"></img>List
-              
             </button>
           </div>
           <div className="justify-self-end text-3xl font-bold">
             <button className="active:bg-zinc-300 p-2 rounded-full mr-3"
-              onClick={() => {setShowModalAddTask(true);setSsTitle('');setSsContent('');}}>
+              onClick={() => {setShowModalAddTask(true);setSsTitle('');setSsContent('');}}
+            >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
               </svg>
@@ -235,7 +237,8 @@ export default function SsList() {
                               className="px-3 py-3 placeholder-slate-300
                               text-slate-600 relative bg-white rounded text-sm border border-zinc-400 shadow outline-none
                               focus:outline-none focus:ring w-full"
-                              value={ssTitle} onChange={handleSsTitle} />
+                              value={ssTitle} onChange={handleSsTitle}
+                            />
                           </div>
                           <div className="mb-4">
                             <label className="text-sm text-gray-700 dark:text-gray-700" htmlFor="ssContent">内容</label>
@@ -244,11 +247,6 @@ export default function SsList() {
                               focus:outline-none focus:ring w-full resize-none" onChange={handleSsContent}
                               value={ssContent} placeholder="Content"
                             ></textarea>
-                            {/* <input type="text" placeholder="Content" id="ssContent"
-                              className="px-3 py-3 placeholder-slate-300
-                              text-slate-600 relative bg-white rounded text-sm border border-zinc-400 shadow outline-none
-                              focus:outline-none focus:ring w-full"
-                              value={ssContent} onChange={handleSsContent} /> */}
                           </div>
                       </div>
                       {/*footer*/}
@@ -334,7 +332,8 @@ export default function SsList() {
                               className="px-3 py-3 placeholder-slate-300
                               text-slate-600 relative bg-white rounded text-sm border border-zinc-400 shadow outline-none
                               focus:outline-none focus:ring w-full"
-                              value={format(selectedTask.ssCreateDate, "yyyy/MM/dd HH:mm")} readOnly/>
+                              value={format(selectedTask.ssCreateDate, "yyyy/MM/dd HH:mm")} readOnly
+                            />
                           </div>
                           <div className="mb-4">
                             <label className="text-sm text-gray-700 dark:text-gray-700" htmlFor="ssTitle">タイトル</label>
@@ -353,11 +352,6 @@ export default function SsList() {
                               focus:outline-none focus:ring w-full resize-none"
                               onChange={handleSsContent} value={ssContent}
                             ></textarea>
-                            {/* <input type="text" placeholder="Content" id="ssContent"
-                              className="px-3 py-3 placeholder-slate-300
-                              text-slate-600 relative bg-white rounded text-sm border border-zinc-400 shadow outline-none
-                              focus:outline-none focus:ring w-full"
-                              value={selectedTask.ssContent} readOnly/> */}
                           </div>
                       </div>
                       {/*footer*/}
