@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
-import { addDays } from 'date-fns'
+import { addDays, isBefore } from 'date-fns'
 import NewLine from "../components/NewLine";
 import Datepicker from "../components/Datepicker";
 import logo from "../img/trnLogo.png";
-import SsListContent from '../components/SsListContent';
 import {
   format
 } from "date-fns";
+import { Waypoint } from 'react-waypoint';
 
 export default function SsList() {
   const [selectedDate, setSelectedDate] = useState(new Date(new Date().setHours(0,0,0,0)));
@@ -17,6 +17,54 @@ export default function SsList() {
   const [ssTitle, setSsTitle] = useState('');
   const [ssContent, setSsContent] = useState('');
   const [ssPriority, setSsPriority] = useState(0);
+
+  //-------test-start---------
+  const [ssPage, setSsPage] = useState(1);
+  const [hasNextPage, setHasNextPage] = useState(true);
+  const SSDIARIES_PER_PAGE = 10;
+
+  async function getDiaries() {
+    if(!hasNextPage) return;
+
+    const res = await fetch(`/api/ssdiary/getSsDiary/${ssPage}&${SSDIARIES_PER_PAGE}`);
+    const taskArrayJson = await res.json();
+    const taskArray = taskArrayJson.map((task) => {
+      return {
+        ...task,
+        ssCreateDate: new Date(task.ssCreateDate),
+        ssUpdateDate: new Date(task.ssUpdateDate)
+      }
+    })
+
+    //get totalCount
+    const res2 = await fetch(`/api/ssdiary/getSsDiariesCount`);
+    const totalCountJson = await res2.json();
+
+    const totalCount = totalCountJson.totalCount;
+    // console.log("totalCount:",totalCount)
+    // console.log("ssTasks.length:",ssTasks.length)
+    // console.log("taskArray.length:",taskArray.length)
+    if(taskArray) {
+      if (totalCount === (ssTasks.length + taskArray.length)) {
+        setHasNextPage(false);
+      };
+      
+      setSsTasks(ssTasks => [...ssTasks, ...taskArray]);
+      setSsPage( ssPage => ssPage + 1 );
+    }
+
+  }
+
+  // async function getDiariesCount() {
+  //   const res = await fetch(`/api/ssdiary/getSsDiariesCount`);
+  //   const taskArrayJson = await res.json();
+
+  //   console.log("bbbbbbbb,",taskArrayJson.totalCount);
+  //   return taskArrayJson.totalCount;
+  //   // setSsTasks(taskArray);
+  // }
+
+  //-------test-end---------
   
   const dayIncrease = () => {
     setSelectedDate(addDays(selectedDate, 1));
@@ -179,13 +227,63 @@ export default function SsList() {
   }
 
   useEffect(() => {
-    getTasks();
+    // getTasks();
     // eslint-disable-next-line react-hooks/exhaustive-deps 
   }, []);
   
   useEffect(() => {
-    console.log(ssTasks)
+    console.log(ssTasks);
+    console.log(ssPage);
   }, [ssTasks]);
+
+//---------------test-start------------
+const ssTaskDatas = () => {
+  const ssTaskList = ssTasks.filter(ssTask => !ssTask.ssIsDeleted)
+    .filter(ssTask => isBefore(ssTask.ssCreateDate, addDays(selectedDate, 1)))
+    .filter(ssTask => !(ssTask.ssIsChecked && isBefore(ssTask.ssUpdateDate, selectedDate)));
+  // ssTaskList.sort((a, b) => b.ssPriority - a.ssPriority);
+  const result = ssTaskList.map((data) => {
+    return (
+      <div key={data.ssKey} className="grid grid-cols-9 text-xl items-center pb-4 h-20">
+        {/* <div className="col-span-9 grid grid-cols-7"> */}
+          <div className="col-span-1">
+            <input type="checkbox" checked={data.ssIsChecked} onChange={() => handleCheckedTask(data)}
+              className="accent-zinc-600 w-5 h-5"/>
+          </div>
+          <div className={"col-span-7 ml-1 break-all border-b-2 border-zinc-400 " + (data.ssIsChecked ? 'line-through text-zinc-400' : '')}
+            onClick={() => handleDetailedTask(data)}>
+            {data.ssTitle}
+          </div>
+        {/* </div> */}
+        <div className="col-span-1">
+          <button className="text-red-500 active:text-red-600 active:bg-zinc-300 p-1 rounded-full"
+            onClick={() => handleRemoveTask(data.ssKey)}>
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    )
+  })
+  return result;
+}
+
+const loadMoreSsDiary = () => {
+  if(ssPage > 1) {
+    getDiaries();
+  }
+}
+
+useEffect(() => {
+  getDiaries();
+  // eslint-disable-next-line react-hooks/exhaustive-deps 
+}, []);
+
+//---------------test-end------------
+
+
+
 
   return (
     <>
@@ -307,9 +405,14 @@ export default function SsList() {
         <NewLine repeat="4" />
         <div className="bg-white p-2 mx-10 my-5 rounded-md min-h-[60%] max-h-[60%] grid grid-rows-1">
           <div className="border border-zinc-500 p-6 overflow-auto">
-            <SsListContent ssTasks={ssTasks} handleRemoveTask={handleRemoveTask} 
-              handleCheckedTask={handleCheckedTask} selectedDate={selectedDate}
-              handleDetailedTask={handleDetailedTask}/>
+            {ssTaskDatas()}
+            {hasNextPage && (
+              <Waypoint onEnter={loadMoreSsDiary}>
+                <div className="grid grid-cols-9 text-xl items-center pb-4 h-20">
+                  Loading!!!
+                </div>
+              </Waypoint>
+            )}
           </div>
           {showModalDetailedTask ? (
               <>

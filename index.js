@@ -101,6 +101,8 @@ app.delete("/api/sslist/:ssKey", async(req, res) => {
   }
 })
 
+app.use('/api/ssdiary', require('./ssdiary'));
+
 app.listen(port, () => {
   console.log(`started app listening on port ${port}`);
 })
