@@ -23,6 +23,7 @@ export default function Motion() {
   
   useEffect(() => {
     onUpdate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps 
   }, [])
   
 
