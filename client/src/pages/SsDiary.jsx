@@ -1,38 +1,44 @@
 import { useState, useEffect } from 'react';
-import { addDays, isBefore } from 'date-fns'
 import NewLine from "../components/NewLine";
-import Datepicker from "../components/Datepicker";
 import logo from "../img/trnLogo.png";
-import {
-  format
-} from "date-fns";
+import { format } from "date-fns";
 import { Waypoint } from 'react-waypoint';
+import ReactDiffViewer , { DiffMethod } from 'react-diff-viewer';
 
 export default function SsList() {
-  const [selectedDate, setSelectedDate] = useState(new Date(new Date().setHours(0,0,0,0)));
-  const [selectedTask, setSelectedTask] = useState({});
-  const [showModalAddTask, setShowModalAddTask] = useState(false);
-  const [showModalDetailedTask, setShowModalDetailedTask] = useState(false);
-  const [ssTasks, setSsTasks] = useState([]);
-  const [ssTitle, setSsTitle] = useState('');
-  const [ssContent, setSsContent] = useState('');
-  const [ssPriority, setSsPriority] = useState(0);
-
-  //-------test-start---------
+  const [ssDiaries, setSsDiaries] = useState([]);
+  const [selectedDiary, setSelectedDiary] = useState({});
+  const [ssOrigContent, setSsOrigContent] = useState([]);
+  const [ssModiContent, setSsModiContent] = useState([]);
   const [ssPage, setSsPage] = useState(1);
   const [hasNextPage, setHasNextPage] = useState(true);
+
+  const [showModalAddDiary, setShowModalAddDiary] = useState(false);
+  const [showModalDetailedDiary, setShowModalDetailedDiary] = useState(false);
+
   const SSDIARIES_PER_PAGE = 10;
+
+  const diffViewerStyle = {
+    variables: {
+      light: {
+        codeFoldGutterBackground: "#6F767E",
+        codeFoldBackground: "#E2E4E5",
+        removedBackground: "",
+        addedBackground: "",
+      }
+    }
+  };
 
   async function getDiaries() {
     if(!hasNextPage) return;
 
     const res = await fetch(`/api/ssdiary/getSsDiary/${ssPage}&${SSDIARIES_PER_PAGE}`);
-    const taskArrayJson = await res.json();
-    const taskArray = taskArrayJson.map((task) => {
+    const diaryArrayJson = await res.json();
+    const diaryArray = diaryArrayJson.map((diary) => {
       return {
-        ...task,
-        ssCreateDate: new Date(task.ssCreateDate),
-        ssUpdateDate: new Date(task.ssUpdateDate)
+        ...diary,
+        ssCreateDate: new Date(diary.ssCreateDate),
+        ssUpdateDate: new Date(diary.ssUpdateDate)
       }
     })
 
@@ -40,224 +46,140 @@ export default function SsList() {
     const res2 = await fetch(`/api/ssdiary/getSsDiariesCount`);
     const totalCountJson = await res2.json();
 
-    const totalCount = totalCountJson.totalCount;
-    // console.log("totalCount:",totalCount)
+    const totalCount = Number(totalCountJson.totalCount);
+    // console.log("totalCount:",typeof totalCount)
     // console.log("ssTasks.length:",ssTasks.length)
-    // console.log("taskArray.length:",taskArray.length)
-    if(taskArray) {
-      if (totalCount === (ssTasks.length + taskArray.length)) {
+    // console.log("diaryArray.length:",diaryArray.length)
+    // console.log("totalLength:",typeof ssTasks.length+diaryArray.length)
+    // console.log("hasNextPage1:",hasNextPage)
+    console.log("diaryArray:",diaryArray)
+    if(diaryArray) {
+      if (totalCount === (ssDiaries.length + diaryArray.length)) {
         setHasNextPage(false);
       };
       
-      setSsTasks(ssTasks => [...ssTasks, ...taskArray]);
+      setSsDiaries(ssDiaries => [...ssDiaries, ...diaryArray]);
       setSsPage( ssPage => ssPage + 1 );
     }
-
   }
 
-  // async function getDiariesCount() {
-  //   const res = await fetch(`/api/ssdiary/getSsDiariesCount`);
-  //   const taskArrayJson = await res.json();
-
-  //   console.log("bbbbbbbb,",taskArrayJson.totalCount);
-  //   return taskArrayJson.totalCount;
-  //   // setSsTasks(taskArray);
-  // }
-
-  //-------test-end---------
-  
-  const dayIncrease = () => {
-    setSelectedDate(addDays(selectedDate, 1));
-  }
-
-  const dayDecrease = () => {
-    setSelectedDate(addDays(selectedDate, -1));
-  }
-
-  const handleSsTitle = (event) => {
-    setSsTitle(event.target.value);
+  const handleSsOrigContent = (event) => {
+    setSsOrigContent(event.target.value);
     // console.log(event.target.value);
   }
 
-  const handleSsContent = (event) => {
-    setSsContent(event.target.value);
+  const handleSsModiContent = (event) => {
+    setSsModiContent(event.target.value);
     // console.log(event.target.value);
   }
 
-  const handleSsPriority = (event) => {
-    setSsPriority(event.target.value);
-    // console.log(event.target.value);
-  }
-
-  async function getTasks() {
-    const res = await fetch("/api/sslist");
-    const taskArrayJson = await res.json();
-    const taskArray = taskArrayJson.map((task) => {
-      return {
-        ...task,
-        ssCreateDate: new Date(task.ssCreateDate),
-        ssUpdateDate: new Date(task.ssUpdateDate)
-      }
-    })
-
-    setSsTasks(taskArray);
-  }
-
-  const handleSubmitAddTask = async e => {
+const handleSubmitAddDiary = async e => {
     e.preventDefault();
-    if(ssTitle === '') return;
+    if(ssOrigContent === '') return;
     try {
-      setShowModalAddTask(false);
+      setShowModalAddDiary(false);
       const body = { 
-        ssTitle,
-        ssContent,
+        ssOrigContent,
+        ssModiContent: ssOrigContent,
         ssCreateDate: new Date(),
         ssUpdateDate: new Date(),
-        ssIsChecked: false,
         ssIsDeleted: false,
       };
-      const response = await fetch("/api/sslist", {
+      const response = await fetch("/api/ssdiary/addDiary", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body)
       })
-
+      
       console.log(response);
-      setSsTitle('');
-      setSsContent('');
-      getTasks();
+      setSsOrigContent('');
+      setSsModiContent('');
+      setSsDiaries([]);
+      setHasNextPage(true);
+      setSsPage(1);
     } catch (err) {
       console.error(err.message);
     }
   }
 
-  const handleSubmitChangeTask = async e => {
-    e.preventDefault();
-    if(ssTitle === '') return;
-    const taskArray = ssTasks.map((task) => {
-      if(selectedTask.ssKey === task.ssKey) {
-        return {
-          ...task,
-          ssTitle: ssTitle,
-          ssContent: ssContent,
-          ssPriority: ssPriority,
-          ssUpdateDate: new Date()
-        }
-      } else {
-        return task;
-      }
-    })
-    setSsTasks(taskArray);
-    try {
-      setShowModalDetailedTask(false);
-      const body = { 
-        ssTitle,
-        ssContent,
-        ssPriority,
-        ssUpdateDate: new Date(),
-      };
-      const response = await fetch(`/api/changeSslist/${selectedTask.ssKey}`,{
-        method: "PUT",
-        headers: { "Content-Type": "application/json"},
-        body: JSON.stringify(body)
-      })
-
-      console.log(response);
-
-      // getTasks();
-    } catch (err) {
-      console.error(err.message);
-    }
+  const handleDetailedDiary = (diary) => {
+    console.log("showModalDetailedDiary:",diary);
+    setShowModalDetailedDiary(true);
+    setSelectedDiary(diary);
+    setSsOrigContent(diary.ssOrigContent);
+    setSsModiContent(diary.ssModiContent);
   }
 
-  const handleRemoveTask = async (ssKey) => {
+  const handleRemoveDiary = async (ssKey) => {
     if(!window.confirm("Are you sure you wanna delete?")) return ;
-    setSsTasks(ssTasks.filter(task => task.ssKey !== ssKey));
+    setSsDiaries(ssDiaries.filter(diary => diary.ssKey !== ssKey));
     try {
-      const deleteTask = await fetch(`/api/sslist/${ssKey}`, {
+      const deleteTask = await fetch(`/api/ssdiary/deleteDiary/${ssKey}`, {
         method: "DELETE"
       });
-
       console.log(deleteTask)
-      // getTasks();
-
     } catch (err) {
       console.error(err.message);
     }
   }
 
-  const handleDetailedTask = (task) => {
-    console.log("showModalDetailedTask:",task);
-    setShowModalDetailedTask(true);
-    setSelectedTask(task);
-    setSsTitle(task.ssTitle);
-    setSsContent(task.ssContent);
-    setSsPriority(task.ssPriority);
-  }
-
-  const handleCheckedTask = async(data) => {
-    const taskArray = ssTasks.map((task) => {
-      if(data.ssKey === task.ssKey) {
+  const handleSubmitChangeDiary = async e => {
+    e.preventDefault();
+    if(ssModiContent === '') return;
+    const diaryArray = ssDiaries.map((diary) => {
+      if(selectedDiary.ssKey === diary.ssKey) {
         return {
-          ...task,
-          ssIsChecked: !data.ssIsChecked,
+          ...diary,
+          ssModiContent: ssModiContent,
           ssUpdateDate: new Date()
         }
       } else {
-        return task;
+        return diary;
       }
     })
-    setSsTasks(taskArray);
+    setSsDiaries(diaryArray);
     try {
-      const body = {
-        ssIsChecked: !data.ssIsChecked,
-        ssUpdateDate: new Date()
+      setShowModalDetailedDiary(false);
+      const body = { 
+        ssModiContent,
+        ssUpdateDate: new Date(),
       };
-      const response = await fetch(`/api/sslist/${data.ssKey}`,{
+      const response = await fetch(`/api/ssdiary/changeDiary/${selectedDiary.ssKey}`,{
         method: "PUT",
         headers: { "Content-Type": "application/json"},
         body: JSON.stringify(body)
       })
 
-      // getTasks();
       console.log(response);
+
+      // getTasks();
     } catch (err) {
       console.error(err.message);
     }
   }
 
-  useEffect(() => {
-    // getTasks();
-    // eslint-disable-next-line react-hooks/exhaustive-deps 
-  }, []);
-  
-  useEffect(() => {
-    console.log(ssTasks);
-    console.log(ssPage);
-  }, [ssTasks]);
-
-//---------------test-start------------
-const ssTaskDatas = () => {
-  const ssTaskList = ssTasks.filter(ssTask => !ssTask.ssIsDeleted)
-    .filter(ssTask => isBefore(ssTask.ssCreateDate, addDays(selectedDate, 1)))
-    .filter(ssTask => !(ssTask.ssIsChecked && isBefore(ssTask.ssUpdateDate, selectedDate)));
-  // ssTaskList.sort((a, b) => b.ssPriority - a.ssPriority);
-  const result = ssTaskList.map((data) => {
+const ssDiaryDatas = () => {
+  const result = ssDiaries.map((data) => {
     return (
-      <div key={data.ssKey} className="grid grid-cols-9 text-xl items-center pb-4 h-20">
-        {/* <div className="col-span-9 grid grid-cols-7"> */}
-          <div className="col-span-1">
-            <input type="checkbox" checked={data.ssIsChecked} onChange={() => handleCheckedTask(data)}
-              className="accent-zinc-600 w-5 h-5"/>
+      <div key={data.ssKey} className="grid grid-cols-12 text-l items-center my-3 h-16
+        border border-zinc-900"
+      >
+        <div className="col-span-2 grid grid-cols-1 h-full border-r border-zinc-700 border-collapse">
+          <div className="col-span-1 w-full border-b bg-zinc-200 border-zinc-700 text-center self-start">
+            {format(data.ssCreateDate, "EEE").toUpperCase()}
           </div>
-          <div className={"col-span-7 ml-1 break-all border-b-2 border-zinc-400 " + (data.ssIsChecked ? 'line-through text-zinc-400' : '')}
-            onClick={() => handleDetailedTask(data)}>
-            {data.ssTitle}
+          <div className="col-span-1 self-middle text-center">
+            {format(data.ssCreateDate, "M/d")}
           </div>
+        </div>
+        <div className="col-span-8 ml-3 break-all truncate"
+          onClick={() => handleDetailedDiary(data)}>
+          {data.ssOrigContent}
+        </div>
         {/* </div> */}
-        <div className="col-span-1">
+        <div className="col-span-2 ml-3 justify-self-center">
           <button className="text-red-500 active:text-red-600 active:bg-zinc-300 p-1 rounded-full"
-            onClick={() => handleRemoveTask(data.ssKey)}>
+            onClick={() => handleRemoveDiary(data.ssKey)}>
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
@@ -273,14 +195,16 @@ const loadMoreSsDiary = () => {
   if(ssPage > 1) {
     getDiaries();
   }
+  // setSsPage( ssPage => ssPage + 1 );
 }
 
 useEffect(() => {
-  getDiaries();
+  if(ssPage === 1) {
+    getDiaries();
+  }
   // eslint-disable-next-line react-hooks/exhaustive-deps 
-}, []);
+}, [ssPage]);
 
-//---------------test-end------------
 
 
 
@@ -301,20 +225,20 @@ useEffect(() => {
           </div>
           <div className="justify-self-center text-3xl font-black">
             <button className="flex"
-              onClick={() => setSelectedDate(new Date(new Date().setHours(0,0,0,0)))}
+              // onClick={() => setSelectedDate(new Date(new Date().setHours(0,0,0,0)))}
             >
-              <img src={logo} alt="" className="w-10 h-10"></img>List
+              <img src={logo} alt="" className="w-10 h-10"></img>Diary
             </button>
           </div>
           <div className="justify-self-end text-3xl font-bold">
             <button className="active:bg-zinc-300 p-2 rounded-full mr-3"
-              onClick={() => {setShowModalAddTask(true);setSsTitle('');setSsContent('');}}
+              onClick={() => {setShowModalAddDiary(true);setSsOrigContent('');}}
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
               </svg>
             </button>
-            {showModalAddTask ? (
+            {showModalAddDiary ? (
               <>
                 <div
                   className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
@@ -325,11 +249,11 @@ useEffect(() => {
                       {/*header*/}
                       <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
                         <h3 className="text-3xl font-semibold">
-                          List追加
+                          Diary追加
                         </h3>
                         <button
                           className="p-1 ml-auto bg-transparent border-0 text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
-                          onClick={() => setShowModalAddTask(false)}
+                          onClick={() => setShowModalAddDiary(false)}
                         >
                           <span className="bg-transparent text-black h-6 w-6 text-2xl block outline-none focus:outline-none">
                             ×
@@ -339,20 +263,11 @@ useEffect(() => {
                       {/*body*/}
                       <div className="relative p-6 flex-auto">
                           <div className="mb-4">
-                            <label className="text-sm text-gray-700 dark:text-gray-700" htmlFor="ssTitle">タイトル</label>
-                            <input type="text" placeholder="Title" id="ssTitle"
-                              className="px-3 py-3 placeholder-slate-300
+                            <label className="text-sm text-gray-700 dark:text-gray-700" htmlFor="ssOrigContent">Diary</label>
+                            <textarea id="ssOrigContent" className="px-3 py-3 h-36 placeholder-slate-300
                               text-slate-600 relative bg-white rounded text-sm border border-zinc-400 shadow outline-none
-                              focus:outline-none focus:ring w-full"
-                              value={ssTitle} onChange={handleSsTitle}
-                            />
-                          </div>
-                          <div className="mb-4">
-                            <label className="text-sm text-gray-700 dark:text-gray-700" htmlFor="ssContent">内容</label>
-                            <textarea id="ssContent" className="px-3 py-3 h-36 placeholder-slate-300
-                              text-slate-600 relative bg-white rounded text-sm border border-zinc-400 shadow outline-none
-                              focus:outline-none focus:ring w-full resize-none" onChange={handleSsContent}
-                              value={ssContent} placeholder="Content"
+                              focus:outline-none focus:ring w-full resize-none" onChange={handleSsOrigContent}
+                              value={ssOrigContent} placeholder="Diary"
                             ></textarea>
                           </div>
                       </div>
@@ -362,14 +277,14 @@ useEffect(() => {
                           className="w-1/2 text-red-500 border border-red-500 rounded background-transparent font-bold uppercase px-6 py-3 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear
                             transition-all duration-150 "
                           type="button"
-                          onClick={() => setShowModalAddTask(false)}
+                          onClick={() => setShowModalAddDiary(false)}
                         >
                           Close
                         </button>
                         <button
                           className="w-1/2 bg-zinc-500 text-white active:bg-zinc-600 font-bold uppercase text-sm px-6 py-3 rounded shadow active:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                           type="submit"
-                          onClick={handleSubmitAddTask}
+                          onClick={handleSubmitAddDiary}
                         >
                           Add
                         </button>
@@ -383,53 +298,36 @@ useEffect(() => {
           </div>
         </div>
         <NewLine repeat="4" />
-        <div className="grid grid-cols-4 justify-between items-center justify-items-center">
-          <div className="col-span-1">
-            <button className="active:bg-zinc-300 p-2 rounded-full ml-5" onClick={dayDecrease}>
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
-          </div>
-          <div className="col-span-2 w-full">
-            <Datepicker selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
-          </div>
-          <div className="col-span-1">
-            <button className="active:bg-zinc-300 p-2 rounded-full mr-5" onClick={dayIncrease}>
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
-          </div>
-        </div>
-        <NewLine repeat="4" />
-        <div className="bg-white p-2 mx-10 my-5 rounded-md min-h-[60%] max-h-[60%] grid grid-rows-1">
-          <div className="border border-zinc-500 p-6 overflow-auto">
-            {ssTaskDatas()}
+        <div className="bg-white p-2 mx-6 my-5 rounded-md min-h-[80%] max-h-[80%] grid grid-rows-1">
+          <div className="border border-zinc-500 p-3 overflow-auto">
+            {ssDiaryDatas()}
             {hasNextPage && (
               <Waypoint onEnter={loadMoreSsDiary}>
-                <div className="grid grid-cols-9 text-xl items-center pb-4 h-20">
-                  Loading!!!
+                <div className="grid justify-center text-xl items-center pb-4 h-20">
+                  <svg className="animate-spin h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
                 </div>
               </Waypoint>
             )}
           </div>
-          {showModalDetailedTask ? (
+          {showModalDetailedDiary ? (
               <>
                 <div
                   className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
                 >
-                  <div className="relative w-5/6 my-6 mx-auto max-w-sm">
+                  <div className="relative h-[85%] w-11/12 my-6 mx-auto max-w-sm">
                     {/*content*/}
-                    <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+                    <div className="border-0 h-full rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                       {/*header*/}
-                      <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
-                        <h3 className="text-3xl font-semibold">
-                          List詳細
-                        </h3>
+                      <div className="grow-0 flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
+                        <h4 className="text-3xl font-semibold">
+                          Diary詳細
+                        </h4>
                         <button
                           className="p-1 ml-auto bg-transparent border-0 text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
-                          onClick={() => setShowModalDetailedTask(false)}
+                          onClick={() => setShowModalDetailedDiary(false)}
                         >
                           <span className="bg-transparent text-black h-6 w-6 text-2xl block outline-none focus:outline-none">
                             ×
@@ -437,59 +335,50 @@ useEffect(() => {
                         </button>
                       </div>
                       {/*body*/}
-                      <div className="relative p-6 flex-auto">
+                      <div className="grow relative p-6 flex-auto min-h-4/5">
                         <div className="mb-4 grid grid-cols-8 gap-5">
-                          <div className="col-span-6">
-                            <label className="text-sm text-gray-700 dark:text-gray-700" htmlFor="ssCreateDate">登録日時</label>
+                          <div className="col-span-8 text-center text-lg">
+                          { format(selectedDiary.ssCreateDate, "yyyy / M / d / EEE - p") }
+                            {/* <label className="text-sm text-gray-700 dark:text-gray-700" htmlFor="ssCreateDate">登録日時</label>
                             <input type="text" placeholder="CreateDate" id="ssCreateDate"
                               className="px-3 py-3 placeholder-slate-300
                               text-slate-600 relative bg-white rounded text-sm border border-zinc-400 shadow outline-none
                               focus:outline-none focus:ring w-full"
-                              value={format(selectedTask.ssCreateDate, "yyyy/MM/dd HH:mm")} readOnly
-                            />
-                          </div>
-                          <div className="col-span-2">
-                            <label className="text-sm text-gray-700 dark:text-gray-700" htmlFor="ssPriority">優先度</label>
-                            <input type="number" placeholder="priority" id="ssPriority"
-                              className="px-3 py-3 placeholder-slate-300
-                              text-slate-600 relative bg-white rounded text-sm border border-zinc-400 shadow outline-none
-                              focus:outline-none focus:ring w-full"
-                              onChange={handleSsPriority} value={ssPriority}
-                            />
+                              value={format(selectedDiary.ssCreateDate, "yyyy/MM/dd HH:mm")} readOnly
+                            /> */}
                           </div>
                         </div>
-                        <div className="mb-4">
-                          <label className="text-sm text-gray-700 dark:text-gray-700" htmlFor="ssTitle">タイトル</label>
-                          <input type="text" placeholder="Title" id="ssTitle"
-                            className="px-3 py-3 placeholder-slate-300
-                            text-slate-600 relative bg-white rounded text-sm border border-zinc-400 shadow outline-none
-                            focus:outline-none focus:ring w-full"
-                            onChange={handleSsTitle} value={ssTitle}
-                            
+                        <div className="mb-4 text-sm">
+                          <ReactDiffViewer
+                            oldValue={selectedDiary.ssOrigContent}
+                            newValue={selectedDiary.ssModiContent}
+                            splitView={false}
+                            compareMethod={DiffMethod.WORDS}
+                            // styles={diffViewerStyle}
+                            showDiffOnly={false}
+                            hideLineNumbers={true}
                           />
-                        </div>
-                        <div className="mb-4">
-                          <label className="text-sm text-gray-700 dark:text-gray-700" htmlFor="ssContent">内容</label>
+                          {/* <label className="text-sm text-gray-700 dark:text-gray-700" htmlFor="ssContent">Diary</label>
                           <textarea id="ssContent" className="px-3 py-3 h-36 placeholder-slate-300
                             text-slate-600 relative bg-white rounded text-sm border border-zinc-400 shadow outline-none
                             focus:outline-none focus:ring w-full resize-none"
-                            onChange={handleSsContent} value={ssContent}
-                          ></textarea>
+                            onChange={handleSsModiContent} value={ssModiContent}
+                          ></textarea> */}
                         </div>
                       </div>
                       {/*footer*/}
-                      <div className="flex items-center justify-between p-6 border-t border-solid border-slate-200 rounded-b">
+                      <div className="grow-0 flex items-center justify-between p-6 border-t border-solid border-slate-200 rounded-b">
                         <button
                           className="w-1/2 text-red-500 border border-red-500 rounded background-transparent font-bold uppercase px-6 py-3 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                           type="button"
-                          onClick={() => setShowModalDetailedTask(false)}
+                          onClick={() => setShowModalDetailedDiary(false)}
                         >
                           Close
                         </button>
                         <button
                           className="w-1/2 bg-zinc-500 text-white active:bg-zinc-600 font-bold uppercase text-sm px-6 py-3 rounded shadow active:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                           type="submit"
-                          onClick={handleSubmitChangeTask}
+                          onClick={handleSubmitChangeDiary}
                         >
                           Change
                         </button>
