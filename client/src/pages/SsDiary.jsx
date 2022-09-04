@@ -5,7 +5,7 @@ import { format } from "date-fns";
 import { Waypoint } from 'react-waypoint';
 import ReactDiffViewer , { DiffMethod } from 'react-diff-viewer';
 
-export default function SsList() {
+export default function SsDiary() {
   const [ssDiaries, setSsDiaries] = useState([]);
   const [selectedDiary, setSelectedDiary] = useState({});
   const [ssOrigContent, setSsOrigContent] = useState([]);
@@ -32,7 +32,9 @@ export default function SsList() {
   async function getDiaries() {
     if(!hasNextPage) return;
 
-    const res = await fetch(`/api/ssdiary/getSsDiary/${ssPage}&${SSDIARIES_PER_PAGE}`);
+    const res = await fetch(`/api/ssdiary/getSsDiary/${ssPage}&${SSDIARIES_PER_PAGE}`, {
+      headers: { "Content-Type": "application/json" }
+    });
     const diaryArrayJson = await res.json();
     const diaryArray = diaryArrayJson.map((diary) => {
       return {
@@ -73,7 +75,7 @@ export default function SsList() {
     // console.log(event.target.value);
   }
 
-const handleSubmitAddDiary = async e => {
+  const handleSubmitAddDiary = async e => {
     e.preventDefault();
     if(ssOrigContent === '') return;
     try {
@@ -110,11 +112,11 @@ const handleSubmitAddDiary = async e => {
     setSsModiContent(diary.ssModiContent);
   }
 
-  const handleRemoveDiary = async (ssKey) => {
+  const handleRemoveDiary = async (_id) => {
     if(!window.confirm("Are you sure you wanna delete?")) return ;
-    setSsDiaries(ssDiaries.filter(diary => diary.ssKey !== ssKey));
+    setSsDiaries(ssDiaries.filter(diary => diary._id !== _id));
     try {
-      const deleteTask = await fetch(`/api/ssdiary/deleteDiary/${ssKey}`, {
+      const deleteTask = await fetch(`/api/ssdiary/deleteDiary/${_id}`, {
         method: "DELETE"
       });
       console.log(deleteTask)
@@ -127,7 +129,7 @@ const handleSubmitAddDiary = async e => {
     e.preventDefault();
     if(ssModiContent === '') return;
     const diaryArray = ssDiaries.map((diary) => {
-      if(selectedDiary.ssKey === diary.ssKey) {
+      if(selectedDiary._id === diary._id) {
         return {
           ...diary,
           ssModiContent: ssModiContent,
@@ -144,7 +146,7 @@ const handleSubmitAddDiary = async e => {
         ssModiContent,
         ssUpdateDate: new Date(),
       };
-      const response = await fetch(`/api/ssdiary/changeDiary/${selectedDiary.ssKey}`,{
+      const response = await fetch(`/api/ssdiary/changeDiary/${selectedDiary._id}`,{
         method: "PUT",
         headers: { "Content-Type": "application/json"},
         body: JSON.stringify(body)
@@ -158,56 +160,66 @@ const handleSubmitAddDiary = async e => {
     }
   }
 
-const ssDiaryDatas = () => {
-  const result = ssDiaries.map((data) => {
-    return (
-      <div key={data.ssKey} className="grid grid-cols-12 text-l items-center my-3 h-16
-        border border-zinc-900"
-      >
-        <div className="col-span-2 grid grid-cols-1 h-full border-r border-zinc-700 border-collapse">
-          <div className="col-span-1 w-full border-b bg-zinc-200 border-zinc-700 text-center self-start">
-            {format(data.ssCreateDate, "EEE").toUpperCase()}
-          </div>
-          <div className="col-span-1 self-middle text-center">
-            {format(data.ssCreateDate, "M/d")}
-          </div>
-        </div>
-        <div className="col-span-8 ml-3 break-all truncate"
-          onClick={() => handleDetailedDiary(data)}>
-          {data.ssOrigContent}
-        </div>
-        {/* </div> */}
-        <div className="col-span-2 ml-3 justify-self-center">
-          <button className="text-red-500 active:text-red-600 active:bg-zinc-300 p-1 rounded-full"
-            onClick={() => handleRemoveDiary(data.ssKey)}>
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
-      </div>
-    )
-  })
-  return result;
-}
-
-const loadMoreSsDiary = () => {
-  if(ssPage > 1) {
-    getDiaries();
+  
+  const handleUpdateOrigContent = () => {
+    if(!window.confirm("Are you sure you wanna update?")) return ;
   }
-  // setSsPage( ssPage => ssPage + 1 );
-}
 
-useEffect(() => {
-  if(ssPage === 1) {
-    getDiaries();
+
+  const ssDiaryDatas = () => {
+    const result = ssDiaries.map((data) => {
+      return (
+        <div key={data._id} className="grid grid-cols-12 text-l items-center my-3 h-16
+          border border-zinc-900"
+        >
+          <div className="col-span-2 grid grid-cols-1 h-full border-r border-zinc-700 border-collapse">
+            <div className="col-span-1 w-full border-b bg-zinc-200 border-zinc-700 text-center self-start">
+              {format(data.ssCreateDate, "EEE").toUpperCase()}
+            </div>
+            <div className="col-span-1 self-middle text-center">
+              {format(data.ssCreateDate, "M/d")}
+            </div>
+          </div>
+          <div className="col-span-8 ml-3 break-all truncate"
+            onClick={() => handleDetailedDiary(data)}>
+            {data.ssOrigContent}
+          </div>
+          {/* </div> */}
+          <div className="col-span-1 mr-3 justify-self-center">
+            <button className="text-green-500 active:text-green-600 active:bg-zinc-300 p-1 rounded-full"
+              onClick={() => handleUpdateOrigContent(data._id)}>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+              </svg>
+            </button>
+          </div>
+          <div className="col-span-1 mr-3 justify-self-center">
+            <button className="text-red-500 active:text-red-600 active:bg-zinc-300 p-1 rounded-full"
+              onClick={() => handleRemoveDiary(data._id)}>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      )
+    })
+    return result;
   }
-  // eslint-disable-next-line react-hooks/exhaustive-deps 
-}, [ssPage]);
 
+  const loadMoreSsDiary = () => {
+    if(ssPage > 1) {
+      getDiaries();
+    }
+    // setSsPage( ssPage => ssPage + 1 );
+  }
 
-
-
+  useEffect(() => {
+    if(ssPage === 1) {
+      getDiaries();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps 
+  }, [ssPage]);
 
   return (
     <>

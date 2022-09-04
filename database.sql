@@ -19,6 +19,22 @@ INSERT INTO public.tbl_sslist(
   'testTitle', 'testContent', now(), now(), false, false
 );
 
+
+CREATE TABLE tbl_sslist_content(
+  ssKey serial primary key,
+  ssListKey integer REFERENCES tbl_sslist,
+  ssContent varchar(200),
+  ssIsChecked boolean,
+  ssIsDeleted boolean
+);
+
+INSERT INTO public.tbl_sslist_content(
+	sslistkey, sscontent, ssischecked, ssisdeleted
+) VALUES (
+  18, 'testContent1', false, false
+);
+
+
 CREATE TABLE tbl_ssdiary(
   ssKey serial primary key,
   ssOrigContent varchar(10000),

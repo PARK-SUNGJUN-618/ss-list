@@ -42,7 +42,7 @@ export default function SsList() {
   }
 
   async function getTasks() {
-    const res = await fetch("/api/sslist");
+    const res = await fetch("/api/sslist/getLists");
     const taskArrayJson = await res.json();
     const taskArray = taskArrayJson.map((task) => {
       return {
@@ -68,7 +68,7 @@ export default function SsList() {
         ssIsChecked: false,
         ssIsDeleted: false,
       };
-      const response = await fetch("/api/sslist", {
+      const response = await fetch("/api/sslist/createList", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body)
@@ -87,7 +87,7 @@ export default function SsList() {
     e.preventDefault();
     if(ssTitle === '') return;
     const taskArray = ssTasks.map((task) => {
-      if(selectedTask.ssKey === task.ssKey) {
+      if(selectedTask._id === task._id) {
         return {
           ...task,
           ssTitle: ssTitle,
@@ -108,8 +108,8 @@ export default function SsList() {
         ssPriority,
         ssUpdateDate: new Date(),
       };
-      const response = await fetch(`/api/changeSslist/${selectedTask.ssKey}`,{
-        method: "PUT",
+      const response = await fetch(`/api/sslist/updateList/${selectedTask._id}`,{
+        method: "POST",
         headers: { "Content-Type": "application/json"},
         body: JSON.stringify(body)
       })
@@ -122,11 +122,11 @@ export default function SsList() {
     }
   }
 
-  const handleRemoveTask = async (ssKey) => {
+  const handleRemoveTask = async (_id) => {
     if(!window.confirm("Are you sure you wanna delete?")) return ;
-    setSsTasks(ssTasks.filter(task => task.ssKey !== ssKey));
+    setSsTasks(ssTasks.filter(task => task._id !== _id));
     try {
-      const deleteTask = await fetch(`/api/sslist/${ssKey}`, {
+      const deleteTask = await fetch(`/api/sslist/deleteList/${_id}`, {
         method: "DELETE"
       });
 
@@ -149,7 +149,7 @@ export default function SsList() {
 
   const handleCheckedTask = async(data) => {
     const taskArray = ssTasks.map((task) => {
-      if(data.ssKey === task.ssKey) {
+      if(data._id === task._id) {
         return {
           ...task,
           ssIsChecked: !data.ssIsChecked,
@@ -165,7 +165,7 @@ export default function SsList() {
         ssIsChecked: !data.ssIsChecked,
         ssUpdateDate: new Date()
       };
-      const response = await fetch(`/api/sslist/${data.ssKey}`,{
+      const response = await fetch(`/api/sslist/checkList/${data._id}`,{
         method: "PUT",
         headers: { "Content-Type": "application/json"},
         body: JSON.stringify(body)
