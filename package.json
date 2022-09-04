@@ -8,10 +8,10 @@
     "npm": "8.5.5"
   },
   "scripts": {
-    "start": "node index_mongo.js",
+    "start": "node index.js",
     "heroku-postbuild": "cd client && npm install && npm run build",
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
-    "dev:server": "nodemon index_mongo.js",
+    "dev:server": "nodemon index.js",
     "dev:client": "cd client && npm start"
   },
   "author": "",

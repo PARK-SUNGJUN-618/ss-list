@@ -14,20 +14,22 @@ export default function SsDiary() {
   const [hasNextPage, setHasNextPage] = useState(true);
 
   const [showModalAddDiary, setShowModalAddDiary] = useState(false);
+  const [showModalChangeOrigContent, setShowModalChangeOrigContent] = useState(false);
+  const [showModalChangeModiContent, setShowModalChangeModiContent] = useState(false);
   const [showModalDetailedDiary, setShowModalDetailedDiary] = useState(false);
 
   const SSDIARIES_PER_PAGE = 10;
 
-  const diffViewerStyle = {
-    variables: {
-      light: {
-        codeFoldGutterBackground: "#6F767E",
-        codeFoldBackground: "#E2E4E5",
-        removedBackground: "",
-        addedBackground: "",
-      }
-    }
-  };
+  // const diffViewerStyle = {
+  //   variables: {
+  //     light: {
+  //       codeFoldGutterBackground: "#6F767E",
+  //       codeFoldBackground: "#E2E4E5",
+  //       removedBackground: "",
+  //       addedBackground: "",
+  //     }
+  //   }
+  // };
 
   async function getDiaries() {
     if(!hasNextPage) return;
@@ -107,6 +109,7 @@ export default function SsDiary() {
   const handleDetailedDiary = (diary) => {
     console.log("showModalDetailedDiary:",diary);
     setShowModalDetailedDiary(true);
+    setShowModalChangeModiContent(false);
     setSelectedDiary(diary);
     setSsOrigContent(diary.ssOrigContent);
     setSsModiContent(diary.ssModiContent);
@@ -125,7 +128,44 @@ export default function SsDiary() {
     }
   }
 
-  const handleSubmitChangeDiary = async e => {
+  const handleSubmitChangeOrigContent = async e => {
+    e.preventDefault();
+    if(ssOrigContent === '') return;
+    const diaryArray = ssDiaries.map((diary) => {
+      if(selectedDiary._id === diary._id) {
+        return {
+          ...diary,
+          ssOrigContent: ssOrigContent,
+          ssModiContent: ssOrigContent,
+          ssUpdateDate: new Date()
+        }
+      } else {
+        return diary;
+      }
+    })
+    setSsDiaries(diaryArray);
+    try {
+      setShowModalChangeOrigContent(false);
+      const body = { 
+        ssOrigContent,
+        ssModiContent: ssOrigContent,
+        ssUpdateDate: new Date(),
+      };
+      const response = await fetch(`/api/ssdiary/changeOrigContent/${selectedDiary._id}`,{
+        method: "PUT",
+        headers: { "Content-Type": "application/json"},
+        body: JSON.stringify(body)
+      })
+
+      console.log(response);
+
+      // getTasks();
+    } catch (err) {
+      console.error(err.message);
+    }
+  }
+
+  const handleSubmitChangeModiContent = async e => {
     e.preventDefault();
     if(ssModiContent === '') return;
     const diaryArray = ssDiaries.map((diary) => {
@@ -140,13 +180,17 @@ export default function SsDiary() {
       }
     })
     setSsDiaries(diaryArray);
+    setSelectedDiary({
+      ...selectedDiary,
+      ssModiContent: ssModiContent
+    });
     try {
-      setShowModalDetailedDiary(false);
+      setShowModalChangeModiContent(false);
       const body = { 
         ssModiContent,
         ssUpdateDate: new Date(),
       };
-      const response = await fetch(`/api/ssdiary/changeDiary/${selectedDiary._id}`,{
+      const response = await fetch(`/api/ssdiary/changeModiContent/${selectedDiary._id}`,{
         method: "PUT",
         headers: { "Content-Type": "application/json"},
         body: JSON.stringify(body)
@@ -161,8 +205,13 @@ export default function SsDiary() {
   }
 
   
-  const handleUpdateOrigContent = () => {
-    if(!window.confirm("Are you sure you wanna update?")) return ;
+  const handleUpdateOrigContent = (diary) => {
+    // if(!window.confirm("Are you sure you wanna update?")) return ;
+    console.log("showModalChangeOrigContent:",diary);
+    setShowModalChangeOrigContent(true);
+    setSelectedDiary(diary);
+    setSsOrigContent(diary.ssOrigContent);
+    // setSsModiContent(diary.ssModiContent);
   }
 
 
@@ -180,14 +229,14 @@ export default function SsDiary() {
               {format(data.ssCreateDate, "M/d")}
             </div>
           </div>
-          <div className="col-span-8 ml-3 break-all truncate"
+          <div className="col-span-8 mx-3 break-all truncate"
             onClick={() => handleDetailedDiary(data)}>
             {data.ssOrigContent}
           </div>
           {/* </div> */}
           <div className="col-span-1 mr-3 justify-self-center">
             <button className="text-green-500 active:text-green-600 active:bg-zinc-300 p-1 rounded-full"
-              onClick={() => handleUpdateOrigContent(data._id)}>
+              onClick={() => handleUpdateOrigContent(data)}>
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
               </svg>
@@ -250,67 +299,11 @@ export default function SsDiary() {
                 <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
               </svg>
             </button>
-            {showModalAddDiary ? (
-              <>
-                <div
-                  className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
-                >
-                  <div className="relative w-5/6 my-6 mx-auto max-w-sm">
-                    {/*content*/}
-                    <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-                      {/*header*/}
-                      <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
-                        <h3 className="text-3xl font-semibold">
-                          Diary追加
-                        </h3>
-                        <button
-                          className="p-1 ml-auto bg-transparent border-0 text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
-                          onClick={() => setShowModalAddDiary(false)}
-                        >
-                          <span className="bg-transparent text-black h-6 w-6 text-2xl block outline-none focus:outline-none">
-                            ×
-                          </span>
-                        </button>
-                      </div>
-                      {/*body*/}
-                      <div className="relative p-6 flex-auto">
-                          <div className="mb-4">
-                            <label className="text-sm text-gray-700 dark:text-gray-700" htmlFor="ssOrigContent">Diary</label>
-                            <textarea id="ssOrigContent" className="px-3 py-3 h-36 placeholder-slate-300
-                              text-slate-600 relative bg-white rounded text-sm border border-zinc-400 shadow outline-none
-                              focus:outline-none focus:ring w-full resize-none" onChange={handleSsOrigContent}
-                              value={ssOrigContent} placeholder="Diary"
-                            ></textarea>
-                          </div>
-                      </div>
-                      {/*footer*/}
-                      <div className="flex items-center justify-between p-6 border-t border-solid border-slate-200 rounded-b">
-                        <button
-                          className="w-1/2 text-red-500 border border-red-500 rounded background-transparent font-bold uppercase px-6 py-3 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear
-                            transition-all duration-150 "
-                          type="button"
-                          onClick={() => setShowModalAddDiary(false)}
-                        >
-                          Close
-                        </button>
-                        <button
-                          className="w-1/2 bg-zinc-500 text-white active:bg-zinc-600 font-bold uppercase text-sm px-6 py-3 rounded shadow active:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                          type="submit"
-                          onClick={handleSubmitAddDiary}
-                        >
-                          Add
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
-              </>
-            ) : null}
+            
           </div>
         </div>
         <NewLine repeat="4" />
-        <div className="bg-white p-2 mx-6 my-5 rounded-md min-h-[80%] max-h-[80%] grid grid-rows-1">
+        <div className="bg-white p-2 mx-6 my-5 rounded-md min-h-[80%] max-h-[85%] grid grid-rows-1">
           <div className="border border-zinc-500 p-3 overflow-auto">
             {ssDiaryDatas()}
             {hasNextPage && (
@@ -324,85 +317,246 @@ export default function SsDiary() {
               </Waypoint>
             )}
           </div>
-          {showModalDetailedDiary ? (
-              <>
-                <div
-                  className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
-                >
-                  <div className="relative h-[85%] w-11/12 my-6 mx-auto max-w-sm">
-                    {/*content*/}
-                    <div className="border-0 h-full rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-                      {/*header*/}
-                      <div className="grow-0 flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
-                        <h4 className="text-3xl font-semibold">
-                          Diary詳細
-                        </h4>
-                        <button
-                          className="p-1 ml-auto bg-transparent border-0 text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
-                          onClick={() => setShowModalDetailedDiary(false)}
-                        >
-                          <span className="bg-transparent text-black h-6 w-6 text-2xl block outline-none focus:outline-none">
-                            ×
-                          </span>
-                        </button>
-                      </div>
-                      {/*body*/}
-                      <div className="grow relative p-6 flex-auto min-h-4/5">
-                        <div className="mb-4 grid grid-cols-8 gap-5">
-                          <div className="col-span-8 text-center text-lg">
-                          { format(selectedDiary.ssCreateDate, "yyyy / M / d / EEE - p") }
-                            {/* <label className="text-sm text-gray-700 dark:text-gray-700" htmlFor="ssCreateDate">登録日時</label>
-                            <input type="text" placeholder="CreateDate" id="ssCreateDate"
-                              className="px-3 py-3 placeholder-slate-300
-                              text-slate-600 relative bg-white rounded text-sm border border-zinc-400 shadow outline-none
-                              focus:outline-none focus:ring w-full"
-                              value={format(selectedDiary.ssCreateDate, "yyyy/MM/dd HH:mm")} readOnly
-                            /> */}
-                          </div>
+          
+        </div>
+      </div>
+      {showModalAddDiary ?
+        <>
+          <div
+            className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
+          >
+            <div className="relative w-5/6 my-6 mx-auto max-w-sm">
+              {/*content*/}
+              <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+                {/*header*/}
+                <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
+                  <h3 className="text-3xl font-semibold">
+                    Diary追加
+                  </h3>
+                  <button
+                    className="p-1 ml-auto bg-transparent border-0 text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
+                    onClick={() => setShowModalAddDiary(false)}
+                  >
+                    <span className="bg-transparent text-black h-6 w-6 text-2xl block outline-none focus:outline-none">
+                      ×
+                    </span>
+                  </button>
+                </div>
+                {/*body*/}
+                <div className="relative p-6 flex-auto">
+                    <div className="mb-4">
+                      <label className="text-sm text-gray-700 dark:text-gray-700" htmlFor="ssOrigContent">Diary</label>
+                      <textarea id="ssOrigContent" className="px-3 py-3 h-36 placeholder-slate-300
+                        text-slate-600 relative bg-white rounded text-sm border border-zinc-400 shadow outline-none
+                        focus:outline-none focus:ring w-full resize-none" onChange={handleSsOrigContent}
+                        value={ssOrigContent} placeholder="Diary"
+                      ></textarea>
+                    </div>
+                </div>
+                {/*footer*/}
+                <div className="flex items-center justify-between p-6 border-t border-solid border-slate-200 rounded-b">
+                  <button
+                    className="w-1/2 text-red-500 border border-red-500 rounded background-transparent font-bold uppercase px-6 py-3 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear
+                      transition-all duration-150 "
+                    type="button"
+                    onClick={() => setShowModalAddDiary(false)}
+                  >
+                    Close
+                  </button>
+                  <button
+                    className="w-1/2 bg-zinc-500 text-white active:bg-zinc-600 font-bold uppercase text-sm px-6 py-3 rounded shadow active:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                    type="submit"
+                    onClick={handleSubmitAddDiary}
+                  >
+                    Add
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+        </>
+        : 
+        null
+      }
+      {showModalDetailedDiary ? 
+        <>
+          <div
+            className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
+          >
+            <div className="relative h-[80%] w-11/12 my-6 mx-auto max-w-sm">
+              {/*content*/}
+              <div className="border-0 h-full rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+                {/*header*/}
+                <div className="grow-0 flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
+                  <h4 className="text-3xl font-semibold">
+                    Diary詳細
+                  </h4>
+                  <button
+                    className="p-1 ml-auto bg-transparent border-0 text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
+                    onClick={() => setShowModalDetailedDiary(false)}
+                  >
+                    <span className="bg-transparent text-black h-6 w-6 text-2xl block outline-none focus:outline-none">
+                      ×
+                    </span>
+                  </button>
+                </div>
+                {/*body*/}
+                <div className="grow relative flex-auto p-6 min-h-10">
+                  {showModalChangeModiContent ?
+                    <>
+                      <div className="grid grid-cols-1 mb-4 text-sm content-center h-full gap-5">
+                        <div className="col-span-1">
+                          <label className="text-sm text-gray-700 dark:text-gray-700" htmlFor="ssContent">修正前</label>
+                          <textarea id="ssContent" className="px-3 py-3 h-36 placeholder-slate-300
+                            text-zinc-300 relative bg-white rounded text-sm border border-zinc-400 shadow outline-none
+                            focus:outline-none focus:ring w-full resize-none overflow-y-auto"
+                            value={selectedDiary.ssOrigContent} readOnly
+                            ></textarea>
                         </div>
-                        <div className="mb-4 text-sm">
-                          <ReactDiffViewer
-                            oldValue={selectedDiary.ssOrigContent}
-                            newValue={selectedDiary.ssModiContent}
-                            splitView={false}
-                            compareMethod={DiffMethod.WORDS}
-                            // styles={diffViewerStyle}
-                            showDiffOnly={false}
-                            hideLineNumbers={true}
-                          />
-                          {/* <label className="text-sm text-gray-700 dark:text-gray-700" htmlFor="ssContent">Diary</label>
+                        <div className="col-span-1">
+                          <label className="text-sm text-gray-700 dark:text-gray-700" htmlFor="ssContent">修正後</label>
                           <textarea id="ssContent" className="px-3 py-3 h-36 placeholder-slate-300
                             text-slate-600 relative bg-white rounded text-sm border border-zinc-400 shadow outline-none
                             focus:outline-none focus:ring w-full resize-none"
                             onChange={handleSsModiContent} value={ssModiContent}
-                          ></textarea> */}
+                            ></textarea>
                         </div>
                       </div>
-                      {/*footer*/}
-                      <div className="grow-0 flex items-center justify-between p-6 border-t border-solid border-slate-200 rounded-b">
-                        <button
-                          className="w-1/2 text-red-500 border border-red-500 rounded background-transparent font-bold uppercase px-6 py-3 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                          type="button"
-                          onClick={() => setShowModalDetailedDiary(false)}
-                        >
-                          Close
-                        </button>
-                        <button
-                          className="w-1/2 bg-zinc-500 text-white active:bg-zinc-600 font-bold uppercase text-sm px-6 py-3 rounded shadow active:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                          type="submit"
-                          onClick={handleSubmitChangeDiary}
-                        >
-                          Change
-                        </button>
+                    </>
+                    :
+                    <>
+                      <div className="grid grid-cols-8 gap-5">
+                        <div className="col-span-8 text-center text-lg py-6">
+                        { format(selectedDiary.ssCreateDate, "yyyy / M / d / EEE - p") }
+                        </div>
                       </div>
+                      <div className="mb-4 text-sm pr-4 h-[80%] overflow-y-auto">
+                        <ReactDiffViewer
+                          oldValue={selectedDiary.ssOrigContent}
+                          newValue={selectedDiary.ssModiContent}
+                          splitView={false}
+                          compareMethod={DiffMethod.WORDS}
+                          // styles={diffViewerStyle}
+                          showDiffOnly={false}
+                          hideLineNumbers={true}
+                          />
+                      </div>
+                    </>
+                  }
+                </div>
+                {/*footer*/}
+                <div className="grow-0 flex items-center justify-between p-6 border-t border-solid border-slate-200 rounded-b">
+                  {showModalChangeModiContent ? 
+                    <>
+                      <button
+                        className="w-1/2 text-red-500 border border-red-500 rounded background-transparent font-bold uppercase px-6 py-3 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                        type="button"
+                        onClick={() => setShowModalChangeModiContent(false)}
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        className="w-1/2 bg-green-500 text-white active:bg-green-600 font-bold uppercase text-sm px-6 py-3 rounded shadow active:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                        type="submit"
+                        onClick={handleSubmitChangeModiContent}
+                      >
+                        Change
+                      </button>
+                    </>
+                    :
+                    <>
+                      <button
+                        className="w-1/2 text-red-500 border border-red-500 rounded background-transparent font-bold uppercase px-6 py-3 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                        type="button"
+                        onClick={() => setShowModalDetailedDiary(false)}
+                      >
+                        Close
+                      </button>
+                      <button
+                        className="w-1/2 bg-zinc-500 text-white active:bg-zinc-600 font-bold uppercase text-sm px-6 py-3 rounded shadow active:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                        type="submit"
+                        onClick={() => setShowModalChangeModiContent(true)}
+                      >
+                        Change
+                      </button>
+                    </>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+        </>
+        : 
+        null
+      }
+      {showModalChangeOrigContent ? (
+        <>
+          <div
+            className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
+          >
+            <div className="relative w-11/12 my-6 mx-auto max-w-sm">
+              {/*content*/}
+              <div className="border-0 h-full rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+                {/*header*/}
+                <div className="grow-0 flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
+                  <h4 className="text-3xl font-semibold">
+                    Diary修正
+                  </h4>
+                  <button
+                    className="p-1 ml-auto bg-transparent border-0 text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
+                    onClick={() => setShowModalChangeOrigContent(false)}
+                  >
+                    <span className="bg-transparent text-black h-6 w-6 text-2xl block outline-none focus:outline-none">
+                      ×
+                    </span>
+                  </button>
+                </div>
+                {/*body*/}
+                <div className="grow relative p-6 flex-auto min-h-20">
+                  <div className="grid grid-cols-1 mb-4 text-sm content-center h-full gap-5">
+                    {/* <div className="col-span-1">
+                      <label className="text-sm text-gray-700 dark:text-gray-700" htmlFor="ssContent">修正前</label>
+                      <textarea id="ssContent" className="px-3 py-3 h-36 placeholder-slate-300
+                        text-zinc-300 relative bg-white rounded text-sm border border-zinc-400 shadow outline-none
+                        focus:outline-none focus:ring w-full resize-none overflow-y-auto"
+                        value={selectedDiary.ssOrigContent} readOnly
+                      ></textarea>
+                    </div> */}
+                    <div className="col-span-1">
+                      <label className="text-sm text-gray-700 dark:text-gray-700" htmlFor="ssContent">Diary</label>
+                      <textarea id="ssContent" className="px-3 py-3 h-36 placeholder-slate-300
+                        text-slate-600 relative bg-white rounded text-sm border border-zinc-400 shadow outline-none
+                        focus:outline-none focus:ring w-full resize-none"
+                        onChange={handleSsOrigContent} value={ssOrigContent}
+                      ></textarea>
                     </div>
                   </div>
                 </div>
-                <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
-              </>
-            ) : null}
-        </div>
-      </div>
+                {/*footer*/}
+                <div className="grow-0 flex items-center justify-between p-6 border-t border-solid border-slate-200 rounded-b">
+                  <button
+                    className="w-1/2 text-red-500 border border-red-500 rounded background-transparent font-bold uppercase px-6 py-3 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                    type="button"
+                    onClick={() => setShowModalChangeOrigContent(false)}
+                  >
+                    Close
+                  </button>
+                  <button
+                    className="w-1/2 bg-zinc-500 text-white active:bg-zinc-600 font-bold uppercase text-sm px-6 py-3 rounded shadow active:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                    type="submit"
+                    onClick={handleSubmitChangeOrigContent}
+                  >
+                    Change
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+        </>
+      ) : null}
     </>
   );
 }

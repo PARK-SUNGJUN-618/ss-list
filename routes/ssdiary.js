@@ -46,6 +46,44 @@ ssdiaryRoutes.route("/getSsDiariesCount").get(async function (req, res) {
   }
 });
 
+// This section will help you update a ssOrigContent by id.
+ssdiaryRoutes.route("/changeOrigContent/:id").put(function (req, response) {
+  let db_connect = dbConn.getDb();
+  let myquery = { _id: ObjectId(req.params.id) };
+  let newvalues = {
+    $set: {
+      ssOrigContent: req.body.ssOrigContent,
+      ssModiContent:req.body.ssModiContent,
+      ssUpdateDate: req.body.ssUpdateDate,
+    },
+  };
+  db_connect
+    .collection("ssdiary")
+    .updateOne(myquery, newvalues, function (err, res) {
+      if (err) throw err;
+      // console.log("1 document updated");
+      response.json(res);
+    });
+});
+
+// This section will help you update a ssModiContent by id.
+ssdiaryRoutes.route("/changeModiContent/:id").put(function (req, response) {
+  let db_connect = dbConn.getDb();
+  let myquery = { _id: ObjectId(req.params.id) };
+  let newvalues = {
+    $set: {
+      ssModiContent:req.body.ssModiContent,
+      ssUpdateDate: req.body.ssUpdateDate,
+    },
+  };
+  db_connect
+    .collection("ssdiary")
+    .updateOne(myquery, newvalues, function (err, res) {
+      if (err) throw err;
+      // console.log("1 document updated");
+      response.json(res);
+    });
+});
 
 // router.get('/getSsDiariesCount', async (req, res) => {
 //   try {

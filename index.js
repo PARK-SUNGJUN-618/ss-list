@@ -1,15 +1,17 @@
-const express = require('express');
+const express = require("express");
 const app = express();
 const cors = require("cors");
 const path = require('path');
-const port = process.env.PORT || 5000
+const port = process.env.PORT || 5000;
+
+// config.env
+require("dotenv").config({ path: "./config.env" });
 
 app.use(cors());
 app.use(express.json());
 
-app.use('/api/data', function(req, res) {
-  res.json({ greeting: 'Hello World' });
-});
+// get driver connection
+const dbConn = require("./db/conn");
 
 app.use(express.static(path.join(__dirname, 'client/build')));
 
@@ -19,10 +21,14 @@ if (process.env.NODE_ENV === "production") {
 }
 
 // route
-app.use('/api/sslist', require('./api/sslist.route'));
-app.use('/api/ssdiary', require('./api/ssdiary.route'));
+app.use('/api/sslist', require("./routes/sslist"));
+app.use('/api/ssdiary', require("./routes/ssdiary"));
 
-// check port
 app.listen(port, () => {
-  console.log(`started app listening on port ${port}`);
-})
+  // perform a database connection when server starts
+  dbConn.connectToServer(function (err) {
+    if (err) console.error(err);
+ 
+  });
+  console.log(`Server is running on port: ${port}`);
+});
