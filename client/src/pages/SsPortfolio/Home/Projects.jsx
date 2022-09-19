@@ -23,11 +23,13 @@ export default function Projects() {
                 className="cursor-pointer"
               >
                 <h1
-                  className={`text-xl px-5 py-3 w-60 sm:w-52 h-full break-words ${
-                    selectedItemIndex === index
-                      ? "text-tertiary border-tertiary border-l-4 -ml-[3px] sm:-ml-0 bg-[#1a7f5a31]"
-                      : "text-white"
-                  }`}
+                  className={`text-xl px-5 py-3 w-60 sm:w-52 h-full break-words
+                    ${
+                      selectedItemIndex === index
+                        ? "text-tertiary border-tertiary border-l-4 -ml-[3px] sm:-ml-0 bg-[#1a7f5a31]"
+                        : "text-white"
+                    }
+                  `}
                 >
                   {project.title}
                 </h1>

@@ -1,8 +1,10 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Route, Routes } from "react-router-dom";
 
 import Header from "../../../components/SsPortfolio/Header";
 import Loader from "../../../components/SsPortfolio/Loader";
+import SsPortfolioAdmin from "../../../pages/SsPortfolio/Admin";
 import {
   HideLoading,
   SetPortfolioData,
@@ -68,6 +70,10 @@ export default function Home() {
           </div>
         )}
       </div>
+      <Routes>
+        <Route path="admin" element={<SsPortfolioAdmin />}></Route>
+
+      </Routes>
     </>
   );
 }
