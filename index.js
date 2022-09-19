@@ -23,12 +23,15 @@ if (process.env.NODE_ENV === "production") {
 // route
 app.use('/api/sslist', require("./routes/sslist"));
 app.use('/api/ssdiary', require("./routes/ssdiary"));
+app.use('/api/ssportfolio', require("./routes/ssportfolio"));
 
 app.listen(port, () => {
   // perform a database connection when server starts
   dbConn.connectToServer(function (err) {
-    if (err) console.error(err);
- 
+    if (err) {
+      console.error(err);
+    }
+
   });
   console.log(`Server is running on port: ${port}`);
 });

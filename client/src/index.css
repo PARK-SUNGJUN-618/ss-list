@@ -1,3 +1,23 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.scrollbar::-webkit-scrollbar {
+    width: 10px;
+    height: 12px;
+  }
+
+.scrollbar::-webkit-scrollbar-track {
+    background: #0A192F;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+    background: #013f3c7f;
+    border-radius: 10px;
+}
+
+/* local if the font is installed */
+@font-face {
+    font-family: 'Broadway';
+    src: local('Broadway'), url("./font/Broadway.ttf") format('truetype');
+}
