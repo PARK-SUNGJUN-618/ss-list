@@ -3,7 +3,8 @@ import Main from "./pages/Main";
 import NotFound from "./pages/NotFound";
 import SsList from "./pages/SsList";
 import SsDiary from "./pages/SsDiary";
-import SsPortfolio from "./pages/SsPortfolio/Home";
+import SsPortfolio from "./pages/SsPortfolio";
+import SsColor from "./pages/SsColor/Home";
 import Motion from "./pages/Motion";
 
 export default function App() {
@@ -17,6 +18,7 @@ export default function App() {
           <Route path="/ssDiary/*" element={<SsDiary />}></Route>
           <Route path="/ssPortfolio/*" element={<SsPortfolio />}></Route>
           <Route path="/motion/*" element={<Motion />}></Route>
+          <Route path="/ssColor/*" element={<SsColor />}></Route>
           <Route path="*" element={<NotFound />}></Route>
         </Routes>
       </BrowserRouter>

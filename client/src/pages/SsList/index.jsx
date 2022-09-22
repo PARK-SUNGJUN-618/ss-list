@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { addDays } from "date-fns";
-import NewLine from "../components/NewLine";
-import Datepicker from "../components/Datepicker";
-import logo from "../img/trnLogo.png";
-import SsListContent from "../components/SsListContent";
+import NewLine from "../../components/NewLine";
+import Datepicker from "../../components/Datepicker";
+import logo from "../../img/trnLogo.png";
+import SsListContent from "../../components/SsListContent";
 import { format } from "date-fns";
 
 export default function SsList() {

@@ -29,7 +29,7 @@ export default function Courses() {
                     ${
                       selectedItemIndex === index
                         ? "text-tertiary border-tertiary border-l-4 -ml-[3px] sm:-ml-0 bg-[#1a7f5a31]"
-                        : "text-white "
+                        : "text-white"
                     }
                   `}
                 >

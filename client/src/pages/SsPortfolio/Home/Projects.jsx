@@ -1,9 +1,12 @@
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import SectionTitle from "../../../components/SsPortfolio/SectionTitle";
-import { projects } from "../../../resources/SsPortfolio/projects";
+// import { projects } from "../../../resources/SsPortfolio/projects";
 
 export default function Projects() {
   const [selectedItemIndex, setSelectedItemIndex] = useState(0);
+  const { portfolioData } = useSelector((state) => state.ssPortfolio);
+  const projects = portfolioData.filter((data) => data.category === "project");
 
   return (
     <div>

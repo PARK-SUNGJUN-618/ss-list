@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import NewLine from "../components/NewLine";
-import logo from "../img/trnLogo.png";
+import NewLine from "../../components/NewLine";
+import logo from "../../img/trnLogo.png";
 import { format } from "date-fns";
 import { Waypoint } from "react-waypoint";
 import ReactDiffViewer, { DiffMethod } from "react-diff-viewer";
