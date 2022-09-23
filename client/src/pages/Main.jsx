@@ -5,7 +5,7 @@ export default function Main() {
   return (
     <div className="w-screen h-screen bg-[#E7C597] bg-opacity-20 overflow-x-hidden">
       <div className="w-full flex justify-center py-10">
-        <img src={couple1} alt="" className="w-52 h-52"></img>
+        <img src={couple1} alt="" className="w-52 h-52 red-500"></img>
       </div>
       <div className="flex flex-col items-center gap-3 text-xl font-[Broadway]">
         <Link to="/ssList">
@@ -48,7 +48,7 @@ export default function Main() {
             </button>
           </div>
         </Link>
-        {/* <Link to="/ssColor">
+        <Link to="/ssColor">
           <div className="text-center">
             <button
               className="font-black p-3 rounded-md bg-[#BDD7EE] opacity-70 w-52
@@ -57,7 +57,7 @@ export default function Main() {
               Go! SSColor
             </button>
           </div>
-        </Link> */}
+        </Link>
       </div>
     </div>
   );
