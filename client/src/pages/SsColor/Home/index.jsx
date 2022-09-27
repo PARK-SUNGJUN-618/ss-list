@@ -98,8 +98,8 @@ export default function Motion() {
         // drag
         // onDrag={onPan}
       >
-        <div className="flex flex-col w-full items-center">
-          <UserAvatar className={`${selectedColor}`}/>
+        <div className="flex justify-center w-full">
+          <UserAvatar className={`${selectedColor} h-[50%]`}/>
         </div>
         {colorArray.map((color, index) => {
           return (
