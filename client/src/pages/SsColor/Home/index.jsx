@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { ReactComponent as ColorPencil } from "../../../img/colorPencil.svg";
+import { ReactComponent as UserAvatar } from "../../../img/userAvatar.svg";
 
 let colorArray = [
   "fill-red-200",
@@ -79,15 +80,14 @@ let colorArray = [
 
 export default function Motion() {
   const [rotateDegree, setRotateDegree] = useState(90);
+  const [selectedColor,setSelectedColor] = useState("fill-gray-400");
 
   function onPan(event, info) {
-    // if(info.offset.x > 0) {
-    //   setRotateDegree(rotateDegree-1);
-    // } else {
-    //   setRotateDegree(rotateDegree+1);
-    // }
-    // console.log(info.point.x, info.point.y);
     setRotateDegree(rotateDegree-info.offset.x/100);
+  }
+  
+  const handleChangeColor = (color) => {
+    setSelectedColor(color);
   }
 
   return (
@@ -98,12 +98,16 @@ export default function Motion() {
         // drag
         // onDrag={onPan}
       >
+        <div className="flex flex-col w-full items-center">
+          <UserAvatar className={`${selectedColor}`}/>
+        </div>
         {colorArray.map((color, index) => {
           return (
             <motion.div
               className="absolute inset-x-1/2 h-full inset-y-[60%]"
               animate={{ rotate: ((index*5)-rotateDegree) }}
               key={index}
+              onClick={() => handleChangeColor(color)}
             >
               <ColorPencil className={`${color}`}></ColorPencil>
             </motion.div>
