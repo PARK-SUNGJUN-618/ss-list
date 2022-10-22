@@ -28,6 +28,16 @@ export default function Main() {
             </button>
           </div>
         </Link>
+        {/* <Link to="/ssClean">
+          <div className="text-center">
+            <button
+              className="font-black p-3 rounded-md bg-[#BDD7EE] opacity-70 w-52
+                transition-colors duration-500 hover:bg-[#5d90bd] active:bg-[#5d90bd]"
+            >
+              Go! SSClean
+            </button>
+          </div>
+        </Link> */}
         <Link to="/ssPortfolio">
           <div className="text-center">
             <button
@@ -55,6 +65,16 @@ export default function Main() {
                 transition-colors duration-500 hover:bg-[#5d90bd] active:bg-[#5d90bd]"
             >
               Go! SSColor
+            </button>
+          </div>
+        </Link>
+        <Link to="/ssMemory">
+          <div className="text-center">
+            <button
+              className="font-black p-3 rounded-md bg-[#BDD7EE] opacity-70 w-52
+                transition-colors duration-500 hover:bg-[#5d90bd] active:bg-[#5d90bd]"
+            >
+              Go! SSMemory
             </button>
           </div>
         </Link>

@@ -11,7 +11,17 @@ module.exports = {
       colors: {
         "primary" : "#0A192F",
         "secondary" : "#F97316",
-        "tertiary" : "#54D6BB"
+        "tertiary" : "#54D6BB",
+        "ssclean": {
+          1: "#F7F7E6",
+          2: "#E0DBF0",
+          3: "#C3BFE2",
+          4: "#9A86B3",
+          5: "#6C5A73",
+          6: "#987095",
+          7: "#4E4964",
+          8: "#1e1c27",
+        },
       }
     },
     height: theme => ({
