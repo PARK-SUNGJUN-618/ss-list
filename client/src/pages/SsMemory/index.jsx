@@ -1,58 +1,58 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 export default function Memory() {
-  // 최초 시작
+  // FirstStart
   const [start, setStart] = useState(false);
-  // 카드 엘리먼트 배열
+  // CardElements
   const [cardEls, setCardEls] = useState([]);
-  // 각 카드의 key 역할을 할 아이템을 담은 배열
+  // CardElements' keys
   const cards = useMemo(
     () => Array.from(new Array(cardEls.length), (x, i) => i + 1),
     [cardEls]
   );
-  // 현재 라운드
+  // Round
   const [round, setRound] = useState(1);
-  // 목숨
+  // Life
   const [life, setLife] = useState(1);
-  // 화면에 출력할 라운드
+  // DisplayRound
   const [displayRound, setDisplayRound] = useState(0);
-  // 난이도(보드 크기)
+  // Difficulty(board size)
   const [difficulty, setDifficulty] = useState(3);
-  // 라운드 시작 여부(클릭 가능 여부 결정)
+  // isRoundStart(can click or not)
   const [roundRunning, setRoundRunning] = useState(false);
-  // 정답
+  // answer
   const [answer, setAnswer] = useState([""]);
-  // 정답 개수
+  // answerCount
   const [answerCount, setAnswerCount] = useState(1);
-  // 클릭 횟수
+  // clickCount
   const [clickCount, setClickCount] = useState(0);
-  // 클릭된 카드
+  // clickedCards
   const [clickedCards, setClickedCards] = useState([]);
-  // 실패 여부
+  // isFail
   const [isFail, setIsFail] = useState(false);
-  // 성공 여부
+  // isSuccess
   const [isSuccess, setIsSuccesss] = useState(false);
-  // 게임 클리어
+  // gameClear
   const [gameClear, setGameClear] = useState(false);
-  // 라운드 시작 카운트다운
+  // countdown
   const [countdown, setCountdown] = useState(4);
-  // 게임오버 카운트다운 클리너
+  // Gameover Countdown Clear
   const [endCountdownClear, setEndCountdownClear] = useState(() => {});
-  // 난이도업 딜레이 타이머 클리너
+  // difficultyUpDelay TimerClear
   const [difficultyUpDelayClear, setDifficultyUpDelayClear] = useState(
     () => {}
   );
   // gsap
-  const [animations, setAnimations] = useState([]);
+  // const [animations, setAnimations] = useState([]);
 
-  // 게임 클리어
+  // game clear
   const clear = useCallback(() => {
     setGameClear(true);
     setStart(false);
     setRoundRunning(false);
   }, []);
 
-  // 재시작
+  // restart
   const restart = () => {
     cardEls.forEach((el) => {
       el.style.backgroundColor = "whitesmoke";
@@ -72,7 +72,7 @@ export default function Memory() {
     setCountdown(4);
   };
 
-  // 다음 라운드 진행 전 초기화
+  // init before next round
   const nextRound = useCallback(() => {
     clearTimeout(endCountdownClear);
     setClickCount(0);
@@ -177,7 +177,18 @@ export default function Memory() {
         setClickCount((prev) => prev + 1);
       }
     },
-    [answer, clear, clickCount, clickedCards, endCountdownClear, gameover, life, nextRound, round, roundRunning]
+    [
+      answer,
+      clear,
+      clickCount,
+      clickedCards,
+      endCountdownClear,
+      gameover,
+      life,
+      nextRound,
+      round,
+      roundRunning,
+    ]
   );
 
   // 라운드 시간제한
@@ -318,26 +329,26 @@ export default function Memory() {
   }, [difficulty]);
 
   // 카드 반짝반짝 효과
-  useEffect(() => {
-    if (!start && cardEls.length !== 0) {
-      const animationArr = [];
+  // useEffect(() => {
+  //   if (!start && cardEls.length !== 0) {
+  //     const animationArr = [];
 
-      // cardEls.forEach((el) => {
-      //   animationArr.push(
-      //     gsap.to(el, cardEls.length / 10, {
-      //       repeat: -1,
-      //       yoyo: true,
-      //       delay: parseInt(el.id) / 10,
-      //       backgroundColor: "whitesmoke",
-      //       borderColor: "#48cae4",
-      //       boxShadow: "0px 0px 15px #48cae4, 0px 0px 30px whitesmoke",
-      //     })
-      //   );
-      // });
+  //     cardEls.forEach((el) => {
+  //       animationArr.push(
+  //         gsap.to(el, cardEls.length / 10, {
+  //           repeat: -1,
+  //           yoyo: true,
+  //           delay: parseInt(el.id) / 10,
+  //           backgroundColor: "whitesmoke",
+  //           borderColor: "#48cae4",
+  //           boxShadow: "0px 0px 15px #48cae4, 0px 0px 30px whitesmoke",
+  //         })
+  //       );
+  //     });
 
-      setAnimations((prev) => [...prev, ...animationArr]);
-    }
-  }, [cardEls, start]);
+  //     setAnimations((prev) => [...prev, ...animationArr]);
+  //   }
+  // }, [cardEls, start]);
 
   // 게임오버 카운트다운 클리어
   useEffect(() => {
@@ -391,7 +402,7 @@ export default function Memory() {
     for (let i = 1; i <= difficulty; i++) {
       rowsReturn.push(
         // <div key={i} className={styles.row}>
-          <div key={i} className="grow flex">
+        <div key={i} className="grow flex">
           {/* 카드 생성 */}
           {cardsGenerator(i)}
         </div>
@@ -418,23 +429,32 @@ export default function Memory() {
 
       <div className="relative">
         {(!start || isFail || gameClear) && (
-          <div className="z-10 text-[whitesmoke] w-[100%] h-[100%] absolute flex flex-col justify-center items-center" style={{textShadow:"0px 0px 10px black"}}>
+          <div
+            className="z-10 text-[whitesmoke] w-[100%] h-[100%] absolute flex flex-col justify-center items-center"
+            style={{ textShadow: "0px 0px 10px black" }}
+          >
             {(isFail || gameClear) && (
               <div className="">
                 {gameClear && (
-                  <div className="font-bold text-[12vmin] whitespace-nowrap mb-[5vmin]">Congratulation!</div>
+                  <div className="font-bold text-[12vmin] whitespace-nowrap mb-[5vmin]">
+                    Congratulation!
+                  </div>
                 )}
-                <div className="font-bold text-[8vmin] whitespace-nowrap text-center">Score</div>
-                <div className="font-bold text-[10] text-center mb-[5vmin]">{round}</div>
+                <div className="font-bold text-[8vmin] whitespace-nowrap text-center">
+                  Score
+                </div>
+                <div className="font-bold text-[10] text-center mb-[5vmin]">
+                  {round}
+                </div>
               </div>
             )}
             <span
               className="font-bold cursor-pointer text-[20vw] whitespace-nowrap text-center hover:scale-110"
               style={{ fontSize: gameClear || isFail ? "5vmin" : "20vmin" }}
               onClick={() => {
-                animations.forEach((el) => {
-                  el.kill();
-                });
+                // animations.forEach((el) => {
+                //   el.kill();
+                // });
                 if (isFail || gameClear) {
                   restart();
                 } else {
@@ -451,7 +471,7 @@ export default function Memory() {
             top-0 bottom-0 text-[whitesmoke] h-12 m-auto flex justify-center
             items-center text-[10vmin] text-center
           "
-          style={{textShadow:"0px 0px 10px black"}}
+          style={{ textShadow: "0px 0px 10px black" }}
         >
           {isFail
             ? ""
@@ -462,7 +482,9 @@ export default function Memory() {
             : start &&
               (countdown === 0 ? "Click!" : countdown !== 4 && countdown)}
         </div>
-        <div className="overflow-hidden flex flex-col w-[80vmin] h-[80vmin] bg-black rounded-xl p-[1%]">{rowsGenerator()}</div>
+        <div className="overflow-hidden flex flex-col w-[80vmin] h-[80vmin] bg-black rounded-xl p-[1%]">
+          {rowsGenerator()}
+        </div>
       </div>
     </div>
   );

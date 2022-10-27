@@ -81,11 +81,52 @@ let colorArray = [
 export default function Motion() {
   const [rotateDegree, setRotateDegree] = useState(90);
   const [selectedColor,setSelectedColor] = useState("fill-gray-400");
+  
+  const [beforeOffsetX, setBeforeOffsetX] = useState(0);
+  // const [rafState, setRafState] = useState(false);
+  
+  // let acc = 0.1;
+  // let rafId;
+  // let delayedYOffset = 0 ;
 
   function onPan(event, info) {
-    setRotateDegree(rotateDegree-info.offset.x/100);
+    if(info.offset.x - beforeOffsetX === 0) return;
+
+    console.log("a:",info.offset.x,",b:",beforeOffsetX);
+    console.log(info.offset.x - beforeOffsetX);
+    // rafId = requestAnimationFrame(loop);
+    // let delayedYOffset = 0;
+    setBeforeOffsetX(info.offset.x)
+    setRotateDegree(rotateDegree - (info.offset.x - beforeOffsetX)/10);
+  }
+
+  function onPanEnd(event, info) {
+    console.log("asdasd")
+    setBeforeOffsetX(0);
   }
   
+  // function loop() {
+  //   delayedYOffset = delayedYOffset + (beforeOffsetX - delayedYOffset) * acc;
+  //   // box.style.width = `${delayedYOffset}px`;
+
+    
+  //   if (Math.abs(beforeOffsetX - delayedYOffset) < 1) {
+  //     cancelAnimationFrame(rafId);
+  //     return;
+  //   }
+  //     //   rafState = false;
+  //     // }
+  //     // if(count === 30) {
+  //     //   cancelAnimationFrame(rafId);
+  //     //   return;
+  //     // }
+      
+  //     // count++;
+  //     requestAnimationFrame(loop);
+      
+  //   console.log("loop:");
+  // }
+
   const handleChangeColor = (color) => {
     setSelectedColor(color);
   }
@@ -95,6 +136,7 @@ export default function Motion() {
       <motion.div
         className="w-screen h-screen overflow-hidden flex gap-2 relative touch-none"
         onPan={onPan}
+        onPanEnd={onPanEnd}
         // drag
         // onDrag={onPan}
       >
