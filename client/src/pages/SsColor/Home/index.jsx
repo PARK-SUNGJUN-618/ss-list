@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { ReactComponent as ColorPencil } from "../../../img/colorPencil.svg";
 import { ReactComponent as UserAvatar } from "../../../img/userAvatar.svg";
+import { useEffect } from "react";
 
 let colorArray = [
   "fill-red-200",
@@ -80,53 +81,43 @@ let colorArray = [
 
 export default function Motion() {
   const [rotateDegree, setRotateDegree] = useState(90);
-  const [selectedColor,setSelectedColor] = useState("fill-gray-400");
+  const [selectedColor, setSelectedColor] = useState("fill-gray-400");
+  const [onPanEndVelocityX, setOnPanEndVelocityX] = useState(0);
+  const [onPanEndDelay, setOnPanEndDelay] = useState(-1);
   
-  const [beforeOffsetX, setBeforeOffsetX] = useState(0);
-  // const [rafState, setRafState] = useState(false);
-  
-  // let acc = 0.1;
-  // let rafId;
-  // let delayedYOffset = 0 ;
-
   function onPan(event, info) {
-    if(info.offset.x - beforeOffsetX === 0) return;
-
-    console.log("a:",info.offset.x,",b:",beforeOffsetX);
-    console.log(info.offset.x - beforeOffsetX);
-    // rafId = requestAnimationFrame(loop);
-    // let delayedYOffset = 0;
-    setBeforeOffsetX(info.offset.x)
-    setRotateDegree(rotateDegree - (info.offset.x - beforeOffsetX)/10);
+    // console.log(info.delta.x);
+    if(info.velocity.x === 0) return;
+    setRotateDegree(rotateDegree - info.velocity.x/100);
   }
 
   function onPanEnd(event, info) {
-    console.log("asdasd")
-    setBeforeOffsetX(0);
+    console.log("onPanEndonPanEndonPanEndonPanEnd")
+    setOnPanEndVelocityX(info.velocity.x);
+    setOnPanEndDelay(0);
+
+    // while(!onPanEndFlag) {
+    //   // console.log("rotateDegree1:",rotateDegree);
+    //   setRotateDegree(rotateDegree - (velocityX/100-onPanEndDelay));
+    //   console.log("rotateDegree2:",rotateDegree);
+    //   onPanEndDelay = onPanEndDelay + (velocityX/100 - onPanEndDelay) * 0.1;
+    //   // console.log("onPanEndWhile:",velocityX/100 - onPanEndDelay);
+    //   if(Math.abs(velocityX/100 - onPanEndDelay) < 0.5) {
+    //     onPanEndFlag = true;
+    //   }
+    // }
   }
+
+  useEffect(() => {
+    console.log("onPanEndDelay:",onPanEndDelay)
+    setRotateDegree(rotateDegree - (onPanEndVelocityX/100-onPanEndDelay));
+    if(Math.abs(onPanEndVelocityX - onPanEndDelay) > 1) {
+      setOnPanEndDelay(onPanEndDelay + (onPanEndVelocityX/100 - onPanEndDelay) * 0.1);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[onPanEndDelay])
   
-  // function loop() {
-  //   delayedYOffset = delayedYOffset + (beforeOffsetX - delayedYOffset) * acc;
-  //   // box.style.width = `${delayedYOffset}px`;
-
-    
-  //   if (Math.abs(beforeOffsetX - delayedYOffset) < 1) {
-  //     cancelAnimationFrame(rafId);
-  //     return;
-  //   }
-  //     //   rafState = false;
-  //     // }
-  //     // if(count === 30) {
-  //     //   cancelAnimationFrame(rafId);
-  //     //   return;
-  //     // }
-      
-  //     // count++;
-  //     requestAnimationFrame(loop);
-      
-  //   console.log("loop:");
-  // }
-
   const handleChangeColor = (color) => {
     setSelectedColor(color);
   }
@@ -137,8 +128,6 @@ export default function Motion() {
         className="w-screen h-screen overflow-hidden flex gap-2 relative touch-none"
         onPan={onPan}
         onPanEnd={onPanEnd}
-        // drag
-        // onDrag={onPan}
       >
         <div className="flex justify-center w-full">
           <UserAvatar className={`${selectedColor} h-[50%]`}/>
