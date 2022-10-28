@@ -92,26 +92,14 @@ export default function Motion() {
   }
 
   function onPanEnd(event, info) {
-    console.log("onPanEndonPanEndonPanEndonPanEnd")
     setOnPanEndVelocityX(info.velocity.x);
     setOnPanEndDelay(0);
-
-    // while(!onPanEndFlag) {
-    //   // console.log("rotateDegree1:",rotateDegree);
-    //   setRotateDegree(rotateDegree - (velocityX/100-onPanEndDelay));
-    //   console.log("rotateDegree2:",rotateDegree);
-    //   onPanEndDelay = onPanEndDelay + (velocityX/100 - onPanEndDelay) * 0.1;
-    //   // console.log("onPanEndWhile:",velocityX/100 - onPanEndDelay);
-    //   if(Math.abs(velocityX/100 - onPanEndDelay) < 0.5) {
-    //     onPanEndFlag = true;
-    //   }
-    // }
   }
 
   useEffect(() => {
-    console.log("onPanEndDelay:",onPanEndDelay)
+    console.log("onPanEndVelocityX - onPanEndDelay:",onPanEndVelocityX - onPanEndDelay)
     setRotateDegree(rotateDegree - (onPanEndVelocityX/100-onPanEndDelay));
-    if(Math.abs(onPanEndVelocityX - onPanEndDelay) > 1) {
+    if(Math.abs(onPanEndVelocityX/100 - onPanEndDelay) > 1) {
       setOnPanEndDelay(onPanEndDelay + (onPanEndVelocityX/100 - onPanEndDelay) * 0.1);
     }
 
@@ -144,78 +132,6 @@ export default function Motion() {
             </motion.div>
           );
         })}
-        {/* <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:-90}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:-85}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:-80}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:-75}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:-70}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:-65}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:-60}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:-55}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:-50}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:-45}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:-40}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:-35}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:-30}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:-25}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:-20}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:-15}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:-10}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:-5}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:0}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:5}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:10}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:15}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:20}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:25}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:30}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:35}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:40}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:45}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:50}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:55}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:60}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:65}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:70}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:75}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:80}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:85}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:90}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:95}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:100}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:105}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:110}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:115}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:120}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:125}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:130}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:135}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:140}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:145}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:150}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:155}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:160}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:165}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:170}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:175}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:180}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:185}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:190}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:195}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:200}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:205}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:210}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:215}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:220}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:225}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:230}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:235}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:240}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:245}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:250}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:255}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:260}}><ColorPencil className=""></ColorPencil></motion.div>
-        <motion.div className="absolute inset-x-1/2 h-full inset-y-[60%]" animate={{rotate:265}}><ColorPencil className=""></ColorPencil></motion.div> */}
       </motion.div>
     </>
   );
