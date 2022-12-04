@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, useMotionValue } from "framer-motion";
 import { ReactComponent as ColorPencil } from "../../../img/colorPencil.svg";
 import { ReactComponent as UserAvatar } from "../../../img/userAvatar.svg";
-import { useEffect } from "react";
+// import { useEffect } from "react";
 
 let colorArray = [
   "fill-red-200",
@@ -80,35 +80,125 @@ let colorArray = [
 ];
 
 export default function Motion() {
-  const [rotateDegree, setRotateDegree] = useState(90);
+  // const [rotateDegree, setRotateDegree] = useState(90);
+  const rotateDegree = useMotionValue(0);
+  // const rotateDegreeSpring = useSpring(rotateDegree);
+  const [rotateDegreeState, setRotateDegreeState] = useState(rotateDegree.get());
   const [selectedColor, setSelectedColor] = useState("fill-gray-400");
-  const [onPanEndVelocityX, setOnPanEndVelocityX] = useState(0);
-  const [onPanEndDelay, setOnPanEndDelay] = useState(-1);
+  // const [onPanEndVelocityX, setOnPanEndVelocityX] = useState(0);
+  // const [onPanEndDelay, setOnPanEndDelay] = useState(-1);
+  // const [onPanEndFlag, setOnPanEndFlag] = useState(false);
+  // const [onPanEndRotateDegree, setOnPanEndRotateDegree] = useState(0);
   
-  function onPan(event, info) {
-    // console.log(info.delta.x);
+  const onPan = (event, info) => {
+    // console.log("rotateDegreeSpring",":",rotateDegreeSpring.get());
     if(info.velocity.x === 0) return;
-    setRotateDegree(rotateDegree - info.velocity.x/100);
+    // rotateDegree.set(rotateDegree.get() - info.velocity.x/200);
+    rotateDegree.set(rotateDegree.get() - info.delta.x/5);
+    setRotateDegreeState(rotateDegree.get());
+    console.log("ro:",info.delta.x/6);
   }
 
-  function onPanEnd(event, info) {
-    setOnPanEndVelocityX(info.velocity.x);
-    setOnPanEndDelay(0);
-  }
+  const onPanEnd = (event, info) => {
+    var flag = false;
+    var acc = 0.1;
+    var delayedEnd = 0;
+    var velocityX = info.delta.x/5;
+    console.log("velocityX:",velocityX);
+    while(!flag) {
+  //     console.log("rotateDegreeSpring",":",rotateDegreeSpring.get());
+  //     // console.log("delayedEnd",":",delayedEnd);
 
-  useEffect(() => {
-    console.log("onPanEndVelocityX - onPanEndDelay:",onPanEndVelocityX - onPanEndDelay)
-    setRotateDegree(rotateDegree - (onPanEndVelocityX/100-onPanEndDelay));
-    if(Math.abs(onPanEndVelocityX/100 - onPanEndDelay) > 1) {
-      setOnPanEndDelay(onPanEndDelay + (onPanEndVelocityX/100 - onPanEndDelay) * 0.1);
+      rotateDegree.set(rotateDegree.get() - (velocityX - delayedEnd));
+      // if()
+      setRotateDegreeState(rotateDegree.get());
+      delayedEnd = delayedEnd + (velocityX - delayedEnd) * acc;
+
+      if(Math.abs(velocityX - delayedEnd) < 0.001) {
+        flag = true;
+      }
+
+      console.log("rotateDegreeState",rotateDegreeState)
+
     }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[onPanEndDelay])
+  //   console.log("flag is true.")
+  //   // setOnPanEndFlag(false);
+  //   // setOnPanEndVelocityX(info.velocity.x/100);
+  //   // setOnPanEndDelay(0);
+  }
+
+  // const effectFunction = useCallback(() => {
+  //   // console.log("onPanEndVelocityX - onPanEndDelay:",onPanEndVelocityX/100 - onPanEndDelay)
+  //   // console.log("onPanEndFlag'",onPanEndFlag)
+  //   console.log("onPanEndDelay'",onPanEndDelay)
+  //   console.log("onPanEndVelocityX'",onPanEndVelocityX)
+  //   console.log("rotateDegree'",rotateDegree)
+  //   if(!onPanEndFlag) {
+  //     setRotateDegree(rotateDegree - (onPanEndVelocityX/100-onPanEndDelay));
+  //     if(Math.abs(onPanEndVelocityX/100 - onPanEndDelay) > 0.01) {
+  //       setOnPanEndDelay(onPanEndDelay + (onPanEndVelocityX/100 - onPanEndDelay) * 0.15);
+  //     } else {
+  //       setOnPanEndFlag(true);
+  //     }
+  //   // } else {
+  //   //   return;
+  //   }
+  // // }, [onPanEndDelay, onPanEndVelocityX, rotateDegree, onPanEndFlag]);
+  // // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
+
+  // useEffect(() => {
+  //   effectFunction();
+
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // },[effectFunction])
+
+  // useEffect(() => {
+  //   if(onPanEndFlag) return;
+  //   console.log("Here!!")
+    
+  //   if(Math.abs(onPanEndVelocityX - onPanEndDelay) > 0.2) {
+  //     setOnPanEndDelay(onPanEndDelay + (onPanEndVelocityX - onPanEndDelay) * 0.1);
+  //   } else {
+  //     setOnPanEndFlag(true);
+  //   }
+
+  //   // setRotateDegree(rotateDegree - (onPanEndVelocityX/100 - onPanEndDelay));
+  //   // setRotateDegree(rotateDegree - (onPanEndVelocityX - onPanEndDelay));
+  //   rotateDegree.set(rotateDegree.get() - (onPanEndVelocityX - onPanEndDelay));
+    
+  //   // if(!onPanEndFlag) {
+  //   //   setRotateDegree(rotateDegree - (onPanEndVelocityX/100-onPanEndDelay));
+  //   //   if(Math.abs(onPanEndVelocityX/100 - onPanEndDelay) > 0.01) {
+  //   //     setOnPanEndDelay(onPanEndDelay + (onPanEndVelocityX/100 - onPanEndDelay) * 0.15);
+  //   //   } else {
+  //   //     setOnPanEndFlag(true);
+  //   //   }
+  //   // } else {
+  //   //   return;
+  //   // }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // },[onPanEndDelay])
   
   const handleChangeColor = (color) => {
     setSelectedColor(color);
   }
+
+  // test!
+  // useEffect(() => {
+    // function updateDegree() {
+    //   rotateDegree.set(rotateDegree.get());
+    //   console.log("here!!");
+    // }
+
+    // const unsubscribeX = rotateDegree.onChange(updateDegree)
+
+    // return () => {
+    //   unsubscribeX()
+    // }
+  //   console.log("rotateDegreeState:",rotateDegreeState);
+  // }, [rotateDegreeState])
 
   return (
     <>
@@ -124,7 +214,7 @@ export default function Motion() {
           return (
             <motion.div
               className="absolute inset-x-1/2 h-full inset-y-[60%]"
-              animate={{ rotate: ((index*5)-rotateDegree) }}
+              animate={{ rotate: ((index*5)-rotateDegreeState) }}
               key={index}
               onClick={() => handleChangeColor(color)}
             >
