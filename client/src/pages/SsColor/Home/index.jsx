@@ -90,7 +90,7 @@ export default function Motion() {
   // const [onPanEndFlag, setOnPanEndFlag] = useState(false);
   // const [onPanEndRotateDegree, setOnPanEndRotateDegree] = useState(0);
   
-  const onPan = (event, info) => { 
+  const onPan = (event, info) => {
     // console.log("rotateDegreeSpring",":",rotateDegreeSpring.get());
     if(info.velocity.x === 0) return;
     // rotateDegree.set(rotateDegree.get() - info.velocity.x/200);

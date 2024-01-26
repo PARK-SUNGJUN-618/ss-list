@@ -11,7 +11,7 @@ import Header from "../../../components/SsPortfolio/Header";
 //   ReloadData,
 // } from "../../../redux/ssPortfolioSlice";
 
-import About from "./About";
+// import About from "./About";
 import Contact from "./Contact";
 import Courses from "./Courses";
 import Experiences from "./Experiences";
@@ -60,7 +60,8 @@ export default function Home() {
         {portfolioData && (
           <div className="bg-primary px-40 sm:px-5">
             <Intro />
-            <About />
+            {/* スクロール移動のためIntro.jsxに移動
+            <About /> */}
             <Experiences />
             <Projects />
             <Courses />

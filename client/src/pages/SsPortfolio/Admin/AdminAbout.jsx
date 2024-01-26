@@ -14,7 +14,7 @@ export default function AdminAbout() {
   const [lottieURL, setLottieURL] = useState(aboutData.lottieURL);
   const [description1, setDescription1] = useState(aboutData.description1);
   const [description2, setDescription2] = useState(aboutData.description2);
-  const [skills, setSkills] = useState(aboutData.skills.join(" , "));
+  const [skills, setSkills] = useState(aboutData.skills.join("$"));
 
   const handleUpdateAbout = async (e) => {
     e.preventDefault();
@@ -24,7 +24,7 @@ export default function AdminAbout() {
         lottieURL,
         description1,
         description2,
-        skills: skills.split(" , "),
+        skills: skills.split("$"),
       };
       console.log(JSON.stringify(body));
       const response = await fetch(`/api/ssportfolio/updateAbout`, {
