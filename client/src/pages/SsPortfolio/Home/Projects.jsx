@@ -8,9 +8,28 @@ export default function Projects() {
   const { portfolioData } = useSelector((state) => state.ssPortfolio);
   const projects = portfolioData.filter((data) => data.category === "project");
 
+  const renderTextWithLinks = (text) => {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const parts = text.split(urlRegex);
+
+    return parts.map((part, index) => {
+      if (part.match(urlRegex)) {
+        // URL이면 링크로 변환
+        return (
+          <a className="text-blue-300" key={index} href={part} target="_blank" rel="noopener noreferrer">
+            {part}
+          </a>
+        );
+      } else {
+        // 일반 텍스트는 그대로 반환
+        return part;
+      }
+    });
+  };
+
   return (
     <div>
-      <SectionTitle title="Projects" />
+      <SectionTitle title="Personal Projects" />
       <div className="flex py-10 gap-20 sm:flex-col">
         <div
           className="flex flex-col gap-10 border-l-2 border-[#135e4c82] w-60
@@ -34,27 +53,30 @@ export default function Projects() {
                     }
                   `}
                 >
-                  {project.title}
+                  {project.image}
                 </h1>
               </div>
             );
           })}
         </div>
-        <div className="flex items-center justify-center gap-10 sm:flex-col">
+        {/* <div className="flex items-center justify-center gap-10 sm:flex-col">
           <img
             className="h-60 w-72 sm:h-40"
             src={projects[selectedItemIndex].image}
             alt=""
-          />
+          /> */}
           <div className="flex flex-col gap-5">
-            <h1 className="text-secondary text-2xl">
+            <h1 className="text-secondary text-3xl">
               {projects[selectedItemIndex].title}
             </h1>
-            <p className="text-white whitespace-pre-wrap min-h-40">
-              {projects[selectedItemIndex].description}
+            <h1 className="text-tertiary text-2xl">
+              {projects[selectedItemIndex].link}
+            </h1>
+            <p className="text-white whitespace-pre-wrap min-h-40 text-lg">
+              {renderTextWithLinks(projects[selectedItemIndex].description)}
             </p>
           </div>
-        </div>
+        {/* </div> */}
       </div>
     </div>
   );

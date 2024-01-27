@@ -166,23 +166,25 @@ export default function AdminProjects() {
               <hr />
               <div className="grow flex py-3 min-h-96">
                 <div className="flex flex-col gap-2 w-full">
-                  <div className="flex justify-center py-3">
+                  {/* <div className="flex justify-center py-3">
                     <img
                       className="h-40 w-64 sm:h-40"
                       src={project.image}
                       alt=""
                     />
+                  </div> */}
+                  <div className="flex gap-3">
+                    {/* <div className="shrink-0 w-24">Technologies</div>
+                    <div className="break-all">{project.technologies}</div> */}
+                    <div className="shrink-0 w-24">Title</div>
+                    <div className="break-all">{project.title}</div>
                   </div>
                   <div className="flex gap-3">
-                    <div className="shrink-0 w-24">Technologies</div>
-                    <div className="break-all">{project.technologies}</div>
-                  </div>
-                  <div className="flex gap-3">
-                    <div className="shrink-0 w-24">Image</div>
+                    <div className="shrink-0 w-24">Period</div>
                     <div className="break-all">{project.image}</div>
                   </div>
                   <div className="flex gap-3">
-                    <div className="shrink-0 w-24">Link</div>
+                    <div className="shrink-0 w-24">Summary</div>
                     <div className="break-all">{project.link}</div>
                   </div>
                   <div className="flex gap-3">
@@ -270,7 +272,7 @@ export default function AdminProjects() {
                       className="text-sm text-gray-700 dark:text-gray-700"
                       htmlFor="image"
                     >
-                      Image
+                      Period
                     </label>
                     <input
                       type="text"
@@ -286,7 +288,7 @@ export default function AdminProjects() {
                       className="text-sm text-gray-700 dark:text-gray-700"
                       htmlFor="link"
                     >
-                      Link
+                      Summary
                     </label>
                     <input
                       type="text"

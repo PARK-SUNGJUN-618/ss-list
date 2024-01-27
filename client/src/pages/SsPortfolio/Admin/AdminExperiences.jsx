@@ -169,7 +169,7 @@ export default function AdminExperiences() {
                     <div className="break-all">{experience.title}</div>
                   </div>
                   <div className="flex gap-3">
-                    <div className="shrink-0 w-24">Company</div>
+                    <div className="shrink-0 w-24">Summary</div>
                     <div className="break-all">{experience.company}</div>
                   </div>
                   <div className="flex gap-3">
@@ -241,7 +241,7 @@ export default function AdminExperiences() {
                       className="text-sm text-gray-700 dark:text-gray-700"
                       htmlFor="company"
                     >
-                      Company
+                      Summary
                     </label>
                     <input
                       type="text"
