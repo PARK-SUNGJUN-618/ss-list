@@ -23,7 +23,7 @@ const About = forwardRef((props, ref) => {
             // style="width: 300px; height: 300px;"
           ></lottie-player>
         </div>
-        <div className="flex flex-col gap-5 w-6/12 sm:w-full text-xl">
+        <div className="flex flex-col gap-5 w-6/12 sm:w-full text-xl sm:text-base">
           <p className="text-white whitespace-pre-wrap leading-8">{description1 || ""}</p>
           <p className="text-white whitespace-pre-wrap">{description2 || ""}</p>
         </div>

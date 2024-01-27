@@ -19,11 +19,11 @@ export default function Intro() {
           <newLine/>
           <newLine/>
           <newLine/>
-          <h1 className="text-3xl text-white">{welcomeText || ""}</h1>
-          <h1 className="text-7xl sm:text-3xl text-secondary font-semibold">
+          <h1 className="text-2xl text-white">{welcomeText || ""}</h1>
+          <h1 className="text-7xl sm:text-4xl text-tertiary font-semibold">
             {firstName || ""}
           </h1>
-          <h1 className="text-7xl text-secondary">{lastName || ""}</h1>
+          <h1 className="text-7xl sm:text-4xl text-secondary">{lastName || ""}</h1>
           <newLine/>
           <h1 className="text-6xl sm:text-3xl text-white font-semibold">
             {caption || ""}
@@ -32,7 +32,7 @@ export default function Intro() {
           <newLine/>
           <newLine/>
           <newLine/>
-          <p className="text-xl text-white w-full whitespace-pre-wrap">
+          <p className="text-xl sm:text-lg text-white w-full whitespace-pre-wrap">
             {description || ""}
           </p>
           <button className="border-2 border-tertiary text-tertiary px-10 py-3 rounded" onClick={scrollToAbout}>
