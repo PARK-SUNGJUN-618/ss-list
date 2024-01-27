@@ -20,10 +20,6 @@ if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, 'client/build')));
 }
 
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
-});
-
 // route
 app.use('/api/sslist', require("./routes/sslist"));
 app.use('/api/ssdiary', require("./routes/ssdiary"));
