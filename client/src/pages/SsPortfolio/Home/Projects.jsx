@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import SectionTitle from "../../../components/SsPortfolio/SectionTitle";
 // import { projects } from "../../../resources/SsPortfolio/projects";
 
@@ -13,13 +14,23 @@ export default function Projects() {
     const parts = text.split(urlRegex);
 
     return parts.map((part, index) => {
+      // URL이면 링크로 변환
       if (part.match(urlRegex)) {
-        // URL이면 링크로 변환
-        return (
-          <a className="text-blue-300" key={index} href={part} target="_blank" rel="noopener noreferrer">
-            {part}
-          </a>
-        );
+        // 도메인이 헤로쿠앱일 경우 Link반환
+        if (part.split('/')[2] === 'ss-list.herokuapp.com') {
+          return (
+            <Link to={part.split('/').pop()} className="text-blue-300">
+                {part}
+            </Link>
+          );
+        // 그 외의 경우에는 일반 링크로 변환
+        } else {
+          return (
+            <a className="text-blue-300" key={index} href={part} target="_blank" rel="noopener noreferrer">
+              {part}
+            </a>
+          );
+        }
       } else {
         // 일반 텍스트는 그대로 반환
         return part;

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import SectionTitle from "../../../components/SsPortfolio/SectionTitle";
 
 export default function Experiences() {
@@ -17,9 +18,9 @@ export default function Experiences() {
       if (part.match(urlRegex)) {
         // URL이면 링크로 변환
         return (
-          <a key={index} href={part} target="_blank" rel="noopener noreferrer">
+          <Link to={part.split('/').pop()} className="text-blue-300">
             {part}
-          </a>
+          </Link>
         );
       } else {
         // 일반 텍스트는 그대로 반환
