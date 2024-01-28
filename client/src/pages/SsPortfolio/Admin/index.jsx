@@ -25,9 +25,19 @@ export default function Admin() {
       <div className="h-screen bg-primary overflow-y-auto overflow-x-hidden scrollbar">
         <Header />
         {adminCode !== "0618" && (
-          <div className="text-white m-3 w-full text-center pt-64">
-            Admin　Password：{" "}
-            <input type="password" value={adminCode} onChange={handleAdminCodeChange} />
+          <div className="flex flex-col items-center">
+            <div className="text-white m-3 w-full text-center pt-64">
+              Admin　Password：{" "}
+              <input type="password" value={adminCode} onChange={handleAdminCodeChange} />
+            </div>
+            <div className="">
+            <h1
+              className="text-white text-4xl font-semibold cursor-pointer rounded-full w-full bg-white bg-opacity-10 my-10 py-3 px-10"
+              onClick={() => window.location.replace("/")}
+            >
+              Go Back
+            </h1>
+            </div>
           </div>
         )}
         {adminCode === "0618" && portfolioData && (
