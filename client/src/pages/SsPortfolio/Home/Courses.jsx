@@ -9,10 +9,10 @@ export default function Courses() {
 
   return (
     <div>
-      <SectionTitle title="Courses" />
+      <SectionTitle title="Courses & Details" />
       <div className="flex py-10 gap-20 sm:flex-col">
         <div
-          className="flex flex-col gap-10 border-l-2 border-[#135e4c82] w-1/3
+          className="flex flex-col gap-10 border-l-2 border-[#135e4c82] w-96
           sm:flex-row sm:overflow-x-scroll sm:w-full scrollbar"
         >
           {courses.map((course, index) => {
@@ -39,26 +39,23 @@ export default function Courses() {
             );
           })}
         </div>
-        <div className="flex items-center justify-center gap-10 sm:flex-col">
-          <div className="flex flex-col gap-5">
-            <h1 className="text-secondary text-2xl">
+        <div className="flex gap-10 w-full sm:flex-col sm:items-center">
+          {courses[selectedItemIndex].image !== "" && (
+            <img
+              className="h-96"
+              src={courses[selectedItemIndex].image}
+              alt=""
+            />
+          )}
+          <div className="flex flex-col gap-5 w-full pt-6 sm:pt-0 min-h-96">
+            <h1 className="text-secondary text-3xl">
               {courses[selectedItemIndex].title}
             </h1>
-            <p className="text-white whitespace-pre-wrap min-h-40">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-              reprehenderit in voluptate velit esse cillum dolore eu fugiat
-              nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-              sunt in culpa qui officia deserunt mollit anim id est laborum.
+            <p className="text-white whitespace-pre-wrap min-h-40 text-lg">
+            {courses[selectedItemIndex].description}
             </p>
           </div>
-          <img
-            className="h-52 w-80"
-            src={courses[selectedItemIndex].image}
-            alt=""
-          />
+          
         </div>
       </div>
     </div>

@@ -43,7 +43,7 @@ export default function Projects() {
       <SectionTitle title="Personal Projects" />
       <div className="flex py-10 gap-20 sm:flex-col">
         <div
-          className="flex flex-col gap-10 border-l-2 border-[#135e4c82] w-60
+          className="flex flex-col gap-10 border-l-2 border-[#135e4c82] w-96
           sm:flex-row sm:overflow-x-scroll sm:w-full scrollbar sm:gap-2"
         >
           {projects.map((project, index) => {
@@ -76,7 +76,7 @@ export default function Projects() {
             src={projects[selectedItemIndex].image}
             alt=""
           /> */}
-          <div className="flex flex-col gap-5">
+          <div className="flex flex-col gap-5 w-full">
             <h1 className="text-secondary text-3xl">
               {projects[selectedItemIndex].title}
             </h1>

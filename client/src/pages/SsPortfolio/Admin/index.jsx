@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 
 import Header from "../../../components/SsPortfolio/Header";
@@ -13,13 +13,24 @@ import AdminProjects from "./AdminProjects";
 
 export default function Admin() {
   const { loading, portfolioData } = useSelector((state) => state.ssPortfolio);
+  const [adminCode, setAdminCode] = useState(""); // 추가된 부분
+
+  const handleAdminCodeChange = (e) => {
+    setAdminCode(e.target.value);
+  };
 
   return (
     <>
       {loading ? <Loader /> : null}
       <div className="h-screen bg-primary overflow-y-auto overflow-x-hidden scrollbar">
         <Header />
-        {portfolioData && (
+        {adminCode !== "0618" && (
+          <div className="text-white m-3 w-full text-center pt-64">
+            Admin　Password：{" "}
+            <input type="password" value={adminCode} onChange={handleAdminCodeChange} />
+          </div>
+        )}
+        {adminCode === "0618" && portfolioData && (
           <Tabs>
             <Tab label="Intro" active>
               <AdminIntro />
