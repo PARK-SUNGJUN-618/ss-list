@@ -32,7 +32,7 @@ export default function Admin() {
             </div>
             <div className="">
             <h1
-              className="text-white text-4xl font-semibold cursor-pointer rounded-full w-full bg-white bg-opacity-10 my-10 py-3 px-10"
+              className="text-white text-4xl font-semibold cursor-pointer rounded-full w-full bg-white bg-opacity-10 my-10 px-10 pt-3 pb-5"
               onClick={() => window.location.replace("/")}
             >
               Go Back!
