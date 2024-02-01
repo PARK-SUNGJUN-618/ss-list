@@ -28,17 +28,14 @@ export default function SsList() {
 
   const handleSsTitle = (event) => {
     setSsTitle(event.target.value);
-    // console.log(event.target.value);
   };
 
   const handleSsContent = (event) => {
     setSsContent(event.target.value);
-    // console.log(event.target.value);
   };
 
   const handleSsPriority = (event) => {
     setSsPriority(event.target.value);
-    // console.log(event.target.value);
   };
 
   async function getTasks() {
@@ -119,7 +116,6 @@ export default function SsList() {
 
       console.log(response);
 
-      // getTasks();
     } catch (err) {
       console.error(err.message);
     }
@@ -134,7 +130,6 @@ export default function SsList() {
       });
 
       console.log(deleteTask);
-      // getTasks();
     } catch (err) {
       console.error(err.message);
     }
@@ -173,7 +168,6 @@ export default function SsList() {
         body: JSON.stringify(body),
       });
 
-      // getTasks();
       console.log(response);
     } catch (err) {
       console.error(err.message);
