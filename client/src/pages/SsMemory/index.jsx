@@ -328,28 +328,6 @@ export default function Memory() {
     setCardEls(document.querySelectorAll(`.cards`));
   }, [difficulty]);
 
-  // 카드 반짝반짝 효과
-  // useEffect(() => {
-  //   if (!start && cardEls.length !== 0) {
-  //     const animationArr = [];
-
-  //     cardEls.forEach((el) => {
-  //       animationArr.push(
-  //         gsap.to(el, cardEls.length / 10, {
-  //           repeat: -1,
-  //           yoyo: true,
-  //           delay: parseInt(el.id) / 10,
-  //           backgroundColor: "whitesmoke",
-  //           borderColor: "#48cae4",
-  //           boxShadow: "0px 0px 15px #48cae4, 0px 0px 30px whitesmoke",
-  //         })
-  //       );
-  //     });
-
-  //     setAnimations((prev) => [...prev, ...animationArr]);
-  //   }
-  // }, [cardEls, start]);
-
   // 게임오버 카운트다운 클리어
   useEffect(() => {
     return () => {
