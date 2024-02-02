@@ -22,17 +22,6 @@ export default function SsDiary() {
 
   const SSDIARIES_PER_PAGE = 10;
 
-  // const diffViewerStyle = {
-  //   variables: {
-  //     light: {
-  //       codeFoldGutterBackground: "#6F767E",
-  //       codeFoldBackground: "#E2E4E5",
-  //       removedBackground: "",
-  //       addedBackground: "",
-  //     }
-  //   }
-  // };
-
   async function getDiaries() {
     if (!hasNextPage) return;
 
@@ -51,17 +40,10 @@ export default function SsDiary() {
       };
     });
 
-    //get totalCount
     const res2 = await fetch(`/api/ssdiary/getSsDiariesCount`);
     const totalCountJson = await res2.json();
 
     const totalCount = Number(totalCountJson.totalCount);
-    // console.log("totalCount:",typeof totalCount)
-    // console.log("ssTasks.length:",ssTasks.length)
-    // console.log("diaryArray.length:",diaryArray.length)
-    // console.log("totalLength:",typeof ssTasks.length+diaryArray.length)
-    // console.log("hasNextPage1:",hasNextPage)
-    console.log("diaryArray:", diaryArray);
     if (diaryArray) {
       if (totalCount === ssDiaries.length + diaryArray.length) {
         setHasNextPage(false);
@@ -74,12 +56,10 @@ export default function SsDiary() {
 
   const handleSsOrigContent = (event) => {
     setSsOrigContent(event.target.value);
-    // console.log(event.target.value);
   };
 
   const handleSsModiContent = (event) => {
     setSsModiContent(event.target.value);
-    // console.log(event.target.value);
   };
 
   const handleSubmitAddDiary = async (e) => {
@@ -167,7 +147,6 @@ export default function SsDiary() {
 
       console.log(response);
 
-      // getTasks();
     } catch (err) {
       console.error(err.message);
     }
@@ -216,12 +195,10 @@ export default function SsDiary() {
   };
 
   const handleUpdateOrigContent = (diary) => {
-    // if(!window.confirm("Are you sure you wanna update?")) return ;
     console.log("showModalChangeOrigContent:", diary);
     setShowModalChangeOrigContent(true);
     setSelectedDiary(diary);
     setSsOrigContent(diary.ssOrigContent);
-    // setSsModiContent(diary.ssModiContent);
   };
 
   const ssDiaryDatas = () => {
