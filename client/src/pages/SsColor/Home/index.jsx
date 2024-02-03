@@ -80,20 +80,12 @@ let colorArray = [
 ];
 
 export default function Motion() {
-  // const [rotateDegree, setRotateDegree] = useState(90);
   const rotateDegree = useMotionValue(0);
-  // const rotateDegreeSpring = useSpring(rotateDegree);
   const [rotateDegreeState, setRotateDegreeState] = useState(rotateDegree.get());
   const [selectedColor, setSelectedColor] = useState("fill-gray-400");
-  // const [onPanEndVelocityX, setOnPanEndVelocityX] = useState(0);
-  // const [onPanEndDelay, setOnPanEndDelay] = useState(-1);
-  // const [onPanEndFlag, setOnPanEndFlag] = useState(false);
-  // const [onPanEndRotateDegree, setOnPanEndRotateDegree] = useState(0);
   
   const onPan = (event, info) => {
-    // console.log("rotateDegreeSpring",":",rotateDegreeSpring.get());
     if(info.velocity.x === 0) return;
-    // rotateDegree.set(rotateDegree.get() - info.velocity.x/200);
     rotateDegree.set(rotateDegree.get() - info.delta.x/5);
     setRotateDegreeState(rotateDegree.get());
     console.log("ro:",info.delta.x/6);
@@ -106,8 +98,6 @@ export default function Motion() {
     var velocityX = info.delta.x/5;
     console.log("velocityX:",velocityX);
     while(!flag) {
-  //     console.log("rotateDegreeSpring",":",rotateDegreeSpring.get());
-  //     // console.log("delayedEnd",":",delayedEnd);
 
       rotateDegree.set(rotateDegree.get() - (velocityX - delayedEnd));
       // if()
@@ -122,83 +112,12 @@ export default function Motion() {
 
     }
 
-  //   console.log("flag is true.")
-  //   // setOnPanEndFlag(false);
-  //   // setOnPanEndVelocityX(info.velocity.x/100);
-  //   // setOnPanEndDelay(0);
   }
 
-  // const effectFunction = useCallback(() => {
-  //   // console.log("onPanEndVelocityX - onPanEndDelay:",onPanEndVelocityX/100 - onPanEndDelay)
-  //   // console.log("onPanEndFlag'",onPanEndFlag)
-  //   console.log("onPanEndDelay'",onPanEndDelay)
-  //   console.log("onPanEndVelocityX'",onPanEndVelocityX)
-  //   console.log("rotateDegree'",rotateDegree)
-  //   if(!onPanEndFlag) {
-  //     setRotateDegree(rotateDegree - (onPanEndVelocityX/100-onPanEndDelay));
-  //     if(Math.abs(onPanEndVelocityX/100 - onPanEndDelay) > 0.01) {
-  //       setOnPanEndDelay(onPanEndDelay + (onPanEndVelocityX/100 - onPanEndDelay) * 0.15);
-  //     } else {
-  //       setOnPanEndFlag(true);
-  //     }
-  //   // } else {
-  //   //   return;
-  //   }
-  // // }, [onPanEndDelay, onPanEndVelocityX, rotateDegree, onPanEndFlag]);
-  // // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
-
-  // useEffect(() => {
-  //   effectFunction();
-
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // },[effectFunction])
-
-  // useEffect(() => {
-  //   if(onPanEndFlag) return;
-  //   console.log("Here!!")
-    
-  //   if(Math.abs(onPanEndVelocityX - onPanEndDelay) > 0.2) {
-  //     setOnPanEndDelay(onPanEndDelay + (onPanEndVelocityX - onPanEndDelay) * 0.1);
-  //   } else {
-  //     setOnPanEndFlag(true);
-  //   }
-
-  //   // setRotateDegree(rotateDegree - (onPanEndVelocityX/100 - onPanEndDelay));
-  //   // setRotateDegree(rotateDegree - (onPanEndVelocityX - onPanEndDelay));
-  //   rotateDegree.set(rotateDegree.get() - (onPanEndVelocityX - onPanEndDelay));
-    
-  //   // if(!onPanEndFlag) {
-  //   //   setRotateDegree(rotateDegree - (onPanEndVelocityX/100-onPanEndDelay));
-  //   //   if(Math.abs(onPanEndVelocityX/100 - onPanEndDelay) > 0.01) {
-  //   //     setOnPanEndDelay(onPanEndDelay + (onPanEndVelocityX/100 - onPanEndDelay) * 0.15);
-  //   //   } else {
-  //   //     setOnPanEndFlag(true);
-  //   //   }
-  //   // } else {
-  //   //   return;
-  //   // }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // },[onPanEndDelay])
   
   const handleChangeColor = (color) => {
     setSelectedColor(color);
   }
-
-  // test!
-  // useEffect(() => {
-    // function updateDegree() {
-    //   rotateDegree.set(rotateDegree.get());
-    //   console.log("here!!");
-    // }
-
-    // const unsubscribeX = rotateDegree.onChange(updateDegree)
-
-    // return () => {
-    //   unsubscribeX()
-    // }
-  //   console.log("rotateDegreeState:",rotateDegreeState);
-  // }, [rotateDegreeState])
 
   return (
     <>
