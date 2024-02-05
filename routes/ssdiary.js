@@ -85,23 +85,6 @@ ssdiaryRoutes.route("/changeModiContent/:id").put(function (req, response) {
     });
 });
 
-// router.get('/getSsDiariesCount', async (req, res) => {
-//   try {
-//     const allDiaries = await pool.query(
-//       `SELECT count(*) "totalCount" FROM tbl_ssdiary`
-//     );
-     
-//     // console.log(allDiaries.rows[0])
-//     // console.log("here!!:",allDiaries)
-//     res.json(allDiaries.rows[0]);
-//   } catch (err) {
-//     console.error(err.message);
-//   }
-// });
-
-
-
-
 // This section will help you get a single record by id
 ssdiaryRoutes.route("/record/:id").get(function (req, res) {
  let db_connect = dbConn.getDb();
