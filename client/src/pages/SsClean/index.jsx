@@ -6,7 +6,6 @@ export default function SsClean() {
     <>
       <Routes>
         <Route path="/" element={<Home />}></Route>
-        {/* <Route path="/admin" element={<Admin />}></Route> */}
       </Routes>
     </>
   );
