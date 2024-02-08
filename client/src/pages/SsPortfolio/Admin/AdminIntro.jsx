@@ -59,7 +59,7 @@ export default function AdminIntro() {
           />
         </div>
         <div className="flex flex-col gap-1">
-          <label htmlFor="firstName">First Name</label>
+          <label htmlFor="firstName">Introduction</label>
           <input
             type="text"
             placeholder="First Name"
@@ -72,7 +72,7 @@ export default function AdminIntro() {
           />
         </div>
         <div className="flex flex-col gap-1">
-          <label htmlFor="lastName">Last Name</label>
+          <label htmlFor="lastName">Name</label>
           <input
             type="text"
             placeholder="Last Name"
