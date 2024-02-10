@@ -13,10 +13,18 @@ import AdminProjects from "./AdminProjects";
 
 export default function Admin() {
   const { loading, portfolioData } = useSelector((state) => state.ssPortfolio);
-  const [adminCode, setAdminCode] = useState(""); // 추가된 부분
+  const [adminID, setAdminID] = useState(""); // 추가된 부분
+  const [adminPassword, setAdminPassword] = useState(""); // 추가된 부분
 
-  const handleAdminCodeChange = (e) => {
-    setAdminCode(e.target.value);
+  const adminIDCheck = "jun";
+  const adminPasswordCheck = "0618";
+
+  const handleAdminIDCodeChange = (e) => {
+    setAdminID(e.target.value);
+  };
+
+  const handleAdminPasswordChange = (e) => {
+    setAdminPassword(e.target.value);
   };
 
   return (
@@ -24,11 +32,15 @@ export default function Admin() {
       {loading ? <Loader /> : null}
       <div className="h-screen bg-primary overflow-y-auto overflow-x-hidden scrollbar">
         <Header />
-        {adminCode !== "0618" && (
+        {(adminID !== adminIDCheck || adminPassword !== adminPasswordCheck) && (
           <div className="flex flex-col items-center">
             <div className="text-white m-3 w-full text-center pt-64">
+              Admin　ID　　　：{" "}
+              <input className="text-black pl-2" type="text" value={adminID} onChange={handleAdminIDCodeChange} />
+            </div>
+            <div className="text-white m-3 w-full text-center">
               Admin　Password：{" "}
-              <input type="password" value={adminCode} onChange={handleAdminCodeChange} />
+              <input className="text-black pl-2" type="password" value={adminPassword} onChange={handleAdminPasswordChange} />
             </div>
             <div className="">
             <h1
@@ -40,7 +52,7 @@ export default function Admin() {
             </div>
           </div>
         )}
-        {adminCode === "0618" && portfolioData && (
+        {adminID === adminIDCheck && adminPassword === adminPasswordCheck && portfolioData && (
           <Tabs>
             <Tab label="Intro" active>
               <AdminIntro />
