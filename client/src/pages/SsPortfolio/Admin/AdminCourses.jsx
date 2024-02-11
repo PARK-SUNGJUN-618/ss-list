@@ -159,13 +159,15 @@ export default function AdminCourses() {
               <hr />
               <div className="grow flex py-3 min-h-96">
                 <div className="flex flex-col gap-2 w-full">
-                  <div className="flex justify-center py-3">
-                    <img
-                      className="h-40 w-64 sm:h-40"
-                      src={course.image}
-                      alt=""
-                    />
-                  </div>
+                  {course.image && (
+                    <div className="flex justify-center py-3">
+                      <img
+                        className="h-52 sm:h-40"
+                        src={course.image}
+                        alt=""
+                      />
+                    </div>
+                  )}
                   <div className="flex gap-3">
                     <div className="shrink-0 w-24">Image</div>
                     <div className="break-all">{course.image}</div>
