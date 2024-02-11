@@ -3,44 +3,41 @@ import { useDispatch, useSelector } from "react-redux";
 import { Snackbar } from "../../../components/SsPortfolio/Snackbar";
 import { HideLoading, ShowLoading } from "../../../redux/ssPortfolioSlice";
 
-export default function AdminProjects() {
+export default function AdminTeamProject() {
   const snackbarRef = useRef(null);
   const dispatch = useDispatch();
   const [showModalAddChange, setShowModalAddChange] = useState(false);
   const [selectedItemForEdit, setSelectedItemForEdit] = useState(null);
   const { portfolioData } = useSelector((state) => state.ssPortfolio);
-  const [projects, setProjects] = useState(
-    portfolioData.filter((data) => data.category === "project")
+  const [experiences, setExperiences] = useState(
+    portfolioData.filter((data) => data.category === "experience")
   );
 
   const [title, setTitle] = useState("");
-  const [image, setImage] = useState("");
-  const [link, setLink] = useState("");
+  const [company, setCompany] = useState("");
+  const [period, setPeriod] = useState("");
   const [description, setDescription] = useState("");
-  const [technologies, setTechnologies] = useState("");
 
-  const handleModalChangeProject = (project) => {
+  const handleModalChangeExperience = (experience) => {
     setShowModalAddChange(true);
-    setSelectedItemForEdit(project);
-    setTitle(project.title);
-    setImage(project.image);
-    setLink(project.link);
-    setDescription(project.description);
-    setTechnologies(project.technologies.join(" , "));
-    console.log("test:", project);
+    setSelectedItemForEdit(experience);
+    setTitle(experience.title);
+    setCompany(experience.company);
+    setPeriod(experience.period);
+    setDescription(experience.description);
+    console.log("test:", experience);
   };
 
-  const handleModalAddProject = () => {
+  const handleModalAddExperience = () => {
     setShowModalAddChange(true);
     setSelectedItemForEdit(null);
     setTitle("");
-    setImage("");
-    setLink("");
+    setCompany("");
+    setPeriod("");
     setDescription("");
-    setTechnologies("");
   };
 
-  const handleSubmitAddProject = async (e) => {
+  const handleSubmitAddExperience = async (e) => {
     console.log("test:", "here!?");
     e.preventDefault();
     if (title === "") return;
@@ -49,12 +46,11 @@ export default function AdminProjects() {
       setShowModalAddChange(false);
       const body = {
         title,
-        image,
-        link,
+        company,
+        period,
         description,
-        technologies: technologies.split(" , "),
       };
-      const response = await fetch("/api/ssportfolio/addProject", {
+      const response = await fetch("/api/ssportfolio/addExperience", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
@@ -63,7 +59,9 @@ export default function AdminProjects() {
 
       const res = await fetch("/api/ssportfolio/getPortfolioData");
       const taskArrayJson = await res.json();
-      setProjects(taskArrayJson.filter((data) => data.category === "project"));
+      setExperiences(
+        taskArrayJson.filter((data) => data.category === "experience")
+      );
     } catch (err) {
       console.error(err.message);
     } finally {
@@ -71,44 +69,41 @@ export default function AdminProjects() {
     }
   };
 
-  const handleSubmitUpdateProject = async (e) => {
+  const handleSubmitUpdateExperience = async (e) => {
     e.preventDefault();
     try {
       dispatch(ShowLoading());
-      const projectsArray = projects.map((project) => {
-        if (selectedItemForEdit._id === project._id) {
+      const experiencesArray = experiences.map((experience) => {
+        if (selectedItemForEdit._id === experience._id) {
           return {
-            ...project,
+            ...experience,
             title,
-            image,
-            link,
+            company,
+            period,
             description,
-            technologies,
           };
         } else {
-          return project;
+          return experience;
         }
       });
-      setProjects(projectsArray);
+      setExperiences(experiencesArray);
       setSelectedItemForEdit({
         ...selectedItemForEdit,
         title,
-        image,
-        link,
+        company,
+        period,
         description,
-        technologies,
       });
 
       const body = {
         title,
-        image,
-        link,
+        company,
+        period,
         description,
-        technologies: technologies.split(" , "),
       };
       console.log(JSON.stringify(body));
       const response = await fetch(
-        `/api/ssportfolio/updateProject/${selectedItemForEdit._id}`,
+        `/api/ssportfolio/updateExperience/${selectedItemForEdit._id}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -124,14 +119,17 @@ export default function AdminProjects() {
     }
   };
 
-  const handleSubmitDeleteProject = async (_id) => {
+  const handleSubmitDeleteExperience = async (_id) => {
     if (!window.confirm("Are you sure you wanna delete?")) return;
     dispatch(ShowLoading());
-    setProjects(projects.filter((project) => project._id !== _id));
+    setExperiences(experiences.filter((experience) => experience._id !== _id));
     try {
-      const deleteTask = await fetch(`/api/ssportfolio/deleteProject/${_id}`, {
-        method: "DELETE",
-      });
+      const deleteTask = await fetch(
+        `/api/ssportfolio/deleteExperience/${_id}`,
+        {
+          method: "DELETE",
+        }
+      );
       console.log(deleteTask);
     } catch (err) {
       console.error(err.message);
@@ -145,52 +143,39 @@ export default function AdminProjects() {
       <div className="flex justify-end px-10 py-4">
         <button
           className="px-5 py-2 text-white bg-secondary"
-          onClick={handleModalAddProject}
+          onClick={handleModalAddExperience}
         >
-          Add Project
+          Add Team Project
         </button>
       </div>
       <div
         className="grid grid-cols-3 pt-10 pb-20 px-10 gap-10 text-white bg-primary
         sm:flex sm:flex-col sm:pt-3"
       >
-        {projects.map((project) => {
+        {experiences.sort((a, b) => b.period.localeCompare(a.period)).map((experience) => {
           return (
             <div
-              key={project._id}
+              key={experience._id}
               className="shadow border p-5 border-gray-400 flex flex-col"
             >
               <h1 className="text-tertiary text-xl font-bold pb-3">
-                {project.title}
+                {experience.period}
               </h1>
               <hr />
-              <div className="grow flex py-3 min-h-96">
+              <div className="grow flex py-3 min-h-52">
                 <div className="flex flex-col gap-2 w-full">
-                  {/* <div className="flex justify-center py-3">
-                    <img
-                      className="h-40 w-64 sm:h-40"
-                      src={project.image}
-                      alt=""
-                    />
-                  </div> */}
                   <div className="flex gap-3">
-                    {/* <div className="shrink-0 w-24">Technologies</div>
-                    <div className="break-all">{project.technologies}</div> */}
                     <div className="shrink-0 w-24">Title</div>
-                    <div className="break-all">{project.title}</div>
-                  </div>
-                  <div className="flex gap-3">
-                    <div className="shrink-0 w-24">Period</div>
-                    <div className="break-all">{project.image}</div>
+                    <div className="break-all">{experience.title}</div>
                   </div>
                   <div className="flex gap-3">
                     <div className="shrink-0 w-24">Summary</div>
-                    <div className="break-all">{project.link}</div>
+                    <div className="break-all">{experience.company}</div>
                   </div>
                   <div className="flex gap-3">
                     <div className="shrink-0 w-24">Description</div>
                     <div className="break-all whitespace-pre-wrap">
-                      {project.description}
+                      {experience.description}
                     </div>
                   </div>
                 </div>
@@ -198,13 +183,13 @@ export default function AdminProjects() {
               <div className="flex justify-end gap-5 mt-5">
                 <button
                   className="bg-red-500 text-white px-5 py-2 "
-                  onClick={() => handleSubmitDeleteProject(project._id)}
+                  onClick={() => handleSubmitDeleteExperience(experience._id)}
                 >
                   Delete
                 </button>
                 <button
                   className="bg-tertiary text-white px-5 py-2"
-                  onClick={() => handleModalChangeProject(project)}
+                  onClick={() => handleModalChangeExperience(experience)}
                 >
                   Edit
                 </button>
@@ -222,7 +207,7 @@ export default function AdminProjects() {
                 {/*header*/}
                 <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
                   <h3 className="text-3xl font-semibold">
-                    {selectedItemForEdit ? "Edit Project" : "Add Project"}
+                    {selectedItemForEdit ? "Edit Experience" : "Add Experience"}
                   </h3>
                   <button
                     className="p-1 ml-auto bg-transparent border-0 text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
@@ -254,51 +239,35 @@ export default function AdminProjects() {
                     ></input>
                     <label
                       className="text-sm text-gray-700 dark:text-gray-700"
-                      htmlFor="technologies"
-                    >
-                      Technologies
-                    </label>
-                    <input
-                      type="text"
-                      id="technologies"
-                      className="px-3 py-3 placeholder-slate-300
-                        text-slate-600 relative bg-white rounded text-sm border border-zinc-400 shadow outline-none
-                        focus:outline-none focus:ring w-full resize-none"
-                      onChange={(e) => setTechnologies(e.target.value)}
-                      value={technologies}
-                      placeholder="Technologies"
-                    ></input>
-                    <label
-                      className="text-sm text-gray-700 dark:text-gray-700"
-                      htmlFor="image"
-                    >
-                      Period
-                    </label>
-                    <input
-                      type="text"
-                      id="image"
-                      className="px-3 py-3 placeholder-slate-300
-                        text-slate-600 relative bg-white rounded text-sm border border-zinc-400 shadow outline-none
-                        focus:outline-none focus:ring w-full resize-none"
-                      onChange={(e) => setImage(e.target.value)}
-                      value={image}
-                      placeholder="Image"
-                    ></input>
-                    <label
-                      className="text-sm text-gray-700 dark:text-gray-700"
-                      htmlFor="link"
+                      htmlFor="company"
                     >
                       Summary
                     </label>
                     <input
                       type="text"
-                      id="link"
+                      id="company"
                       className="px-3 py-3 placeholder-slate-300
                         text-slate-600 relative bg-white rounded text-sm border border-zinc-400 shadow outline-none
                         focus:outline-none focus:ring w-full resize-none"
-                      onChange={(e) => setLink(e.target.value)}
-                      value={link}
-                      placeholder="Link"
+                      onChange={(e) => setCompany(e.target.value)}
+                      value={company}
+                      placeholder="Company"
+                    ></input>
+                    <label
+                      className="text-sm text-gray-700 dark:text-gray-700"
+                      htmlFor="period"
+                    >
+                      Period
+                    </label>
+                    <input
+                      type="text"
+                      id="period"
+                      className="px-3 py-3 placeholder-slate-300
+                        text-slate-600 relative bg-white rounded text-sm border border-zinc-400 shadow outline-none
+                        focus:outline-none focus:ring w-full resize-none"
+                      onChange={(e) => setPeriod(e.target.value)}
+                      value={period}
+                      placeholder="Period"
                     ></input>
                     <label
                       className="text-sm text-gray-700 dark:text-gray-700"
@@ -332,7 +301,7 @@ export default function AdminProjects() {
                     <button
                       className="w-32 sm:w-1/2 bg-zinc-500 text-white active:bg-zinc-600 font-bold uppercase text-sm px-6 py-3 rounded shadow active:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                       type="submit"
-                      onClick={handleSubmitUpdateProject}
+                      onClick={handleSubmitUpdateExperience}
                     >
                       Edit
                     </button>
@@ -340,7 +309,7 @@ export default function AdminProjects() {
                     <button
                       className="w-32 sm:w-1/2 bg-zinc-500 text-white active:bg-zinc-600 font-bold uppercase text-sm px-6 py-3 rounded shadow active:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                       type="submit"
-                      onClick={handleSubmitAddProject}
+                      onClick={handleSubmitAddExperience}
                     >
                       Add
                     </button>

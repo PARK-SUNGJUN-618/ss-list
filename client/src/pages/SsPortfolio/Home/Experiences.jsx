@@ -47,7 +47,7 @@ export default function Experiences() {
           className="flex flex-col gap-10 border-l-2 border-[#135e4c82] w-96
           sm:flex-row sm:overflow-x-scroll sm:w-full sm:gap-2 scrollbar"
         >
-          {experiences.map((experience, index) => {
+          {experiences.sort((a, b) => b.period.localeCompare(a.period)).map((experience, index) => {
             return (
               <div
                 key={index}

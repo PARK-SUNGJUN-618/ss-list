@@ -7,9 +7,9 @@ import { Tabs, Tab } from "../../../components/SsPortfolio/Tabs";
 import AdminAbout from "./AdminAbout";
 import AdminContact from "./AdminContact";
 import AdminCourses from "./AdminCourses";
-import AdminExperiences from "./AdminExperiences";
+import AdminTeamProject from "./AdminTeamProject";
 import AdminIntro from "./AdminIntro";
-import AdminProjects from "./AdminProjects";
+import AdminPersonalProjects from "./AdminPersonalProjects";
 
 export default function Admin() {
   const { loading, portfolioData } = useSelector((state) => state.ssPortfolio);
@@ -60,11 +60,11 @@ export default function Admin() {
             <Tab label="About">
               <AdminAbout />
             </Tab>
-            <Tab label="Experiences">
-              <AdminExperiences />
+            <Tab label="Team Projects">
+              <AdminTeamProject />
             </Tab>
-            <Tab label="Projects">
-              <AdminProjects />
+            <Tab label="Personal Projects">
+              <AdminPersonalProjects />
             </Tab>
             <Tab label="Courses">
               <AdminCourses />

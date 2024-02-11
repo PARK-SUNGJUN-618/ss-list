@@ -46,7 +46,7 @@ export default function Projects() {
           className="flex flex-col gap-10 border-l-2 border-[#135e4c82] w-96
           sm:flex-row sm:overflow-x-scroll sm:w-full scrollbar sm:gap-2"
         >
-          {projects.map((project, index) => {
+          {projects.sort((a, b) => b.image.localeCompare(a.image)).map((project, index) => {
             return (
               <div
                 key={index}
