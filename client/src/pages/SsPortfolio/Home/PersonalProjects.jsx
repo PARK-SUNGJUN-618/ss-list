@@ -2,13 +2,12 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import SectionTitle from "../../../components/SsPortfolio/SectionTitle";
+// import { projects } from "../../../resources/SsPortfolio/projects";
 
-export default function Experiences() {
+export default function PersonalProjects() {
   const [selectedItemIndex, setSelectedItemIndex] = useState(0);
   const { portfolioData } = useSelector((state) => state.ssPortfolio);
-  const experiences = portfolioData.filter(
-    (data) => data.category === "experience"
-  );
+  const projects = portfolioData.filter((data) => data.category === "project");
 
   const renderTextWithLinks = (text) => {
     const urlRegex = /(https?:\/\/[^\s]+)/g;
@@ -41,13 +40,13 @@ export default function Experiences() {
 
   return (
     <div>
-      <SectionTitle title="Team Projects" />
+      <SectionTitle title="Personal Projects" />
       <div className="flex py-10 gap-20 sm:flex-col">
         <div
           className="flex flex-col gap-10 border-l-2 border-[#135e4c82] w-96
-          sm:flex-row sm:overflow-x-scroll sm:w-full sm:gap-2 scrollbar"
+          sm:flex-row sm:overflow-x-scroll sm:w-full scrollbar sm:gap-2"
         >
-          {experiences.sort((a, b) => b.period.localeCompare(a.period)).map((experience, index) => {
+          {projects.sort((a, b) => b.image.localeCompare(a.image)).map((project, index) => {
             return (
               <div
                 key={index}
@@ -60,28 +59,35 @@ export default function Experiences() {
                   className={`text-xl px-5 py-3 w-64 sm:w-52 h-full break-words
                     ${
                       selectedItemIndex === index
-                        ? "text-tertiary border-l-4 border-tertiary -ml-[3px] sm:-ml-0 bg-[#1a7f5a31]"
+                        ? "text-tertiary border-tertiary border-l-4 -ml-[3px] sm:-ml-0 bg-[#1a7f5a31]"
                         : "text-white"
                     }
                   `}
                 >
-                  {experience.period}
+                  {project.image}
                 </h1>
               </div>
             );
           })}
         </div>
-        <div className="flex flex-col gap-5 w-full">
-          <h1 className="text-secondary text-3xl">
-            {experiences[selectedItemIndex].title}
-          </h1>
-          <h1 className="text-tertiary text-2xl">
-            {experiences[selectedItemIndex].company}
-          </h1>
-          <p className="text-white whitespace-pre-wrap min-h-40 text-lg">
-            {renderTextWithLinks(experiences[selectedItemIndex].description)}
-          </p>
-        </div>
+        {/* <div className="flex items-center justify-center gap-10 sm:flex-col">
+          <img
+            className="h-60 w-72 sm:h-40"
+            src={projects[selectedItemIndex].image}
+            alt=""
+          /> */}
+          <div className="flex flex-col gap-5 w-full">
+            <h1 className="text-secondary text-3xl">
+              {projects[selectedItemIndex].title}
+            </h1>
+            <h1 className="text-tertiary text-2xl">
+              {projects[selectedItemIndex].link}
+            </h1>
+            <p className="text-white whitespace-pre-wrap min-h-40 text-lg">
+              {renderTextWithLinks(projects[selectedItemIndex].description)}
+            </p>
+          </div>
+        {/* </div> */}
       </div>
     </div>
   );

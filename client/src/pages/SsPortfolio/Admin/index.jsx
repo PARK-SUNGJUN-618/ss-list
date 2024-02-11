@@ -7,7 +7,7 @@ import { Tabs, Tab } from "../../../components/SsPortfolio/Tabs";
 import AdminAbout from "./AdminAbout";
 import AdminContact from "./AdminContact";
 import AdminCourses from "./AdminCourses";
-import AdminTeamProject from "./AdminTeamProject";
+import AdminTeamProjects from "./AdminTeamProjects";
 import AdminIntro from "./AdminIntro";
 import AdminPersonalProjects from "./AdminPersonalProjects";
 
@@ -61,7 +61,7 @@ export default function Admin() {
               <AdminAbout />
             </Tab>
             <Tab label="Team Projects">
-              <AdminTeamProject />
+              <AdminTeamProjects />
             </Tab>
             <Tab label="Personal Projects">
               <AdminPersonalProjects />

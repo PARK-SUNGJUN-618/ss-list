@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Snackbar } from "../../../components/SsPortfolio/Snackbar";
 import { HideLoading, ShowLoading } from "../../../redux/ssPortfolioSlice";
 
-export default function AdminTeamProject() {
+export default function AdminTeamProjects() {
   const snackbarRef = useRef(null);
   const dispatch = useDispatch();
   const [showModalAddChange, setShowModalAddChange] = useState(false);

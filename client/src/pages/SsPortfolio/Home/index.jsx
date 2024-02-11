@@ -1,55 +1,18 @@
-// import { useEffect } from "react";
-// import { useDispatch, useSelector } from "react-redux";
 import { useSelector } from "react-redux";
 
 import Header from "../../../components/SsPortfolio/Header";
-// import Loader from "../../../components/SsPortfolio/Loader";
-// import {
-//   HideLoading,
-//   SetPortfolioData,
-//   ShowLoading,
-//   ReloadData,
-// } from "../../../redux/ssPortfolioSlice";
 
 // import About from "./About";
 import Contact from "./Contact";
 import Courses from "./Courses";
-import Experiences from "./Experiences";
+import TeamProjects from "./TeamProjects";
 import Footer from "./Footer";
 import Intro from "./Intro";
 import LeftSider from "./LeftSider";
-import Projects from "./Projects";
+import PersonalProjects from "./PersonalProjects";
 
 export default function Home() {
-  // const { loading, portfolioData, reloadData } = useSelector(
-  //   (state) => state.ssPortfolio
-  // );
   const { portfolioData } = useSelector((state) => state.ssPortfolio);
-  // const dispatch = useDispatch();
-
-  // const getPortfolioData = async () => {
-  //   dispatch(ShowLoading());
-  //   try {
-  //     const res = await fetch("/api/ssportfolio/getPortfolioData");
-  //     const taskArrayJson = await res.json();
-  //     dispatch(SetPortfolioData(taskArrayJson));
-  //     dispatch(ReloadData(false));
-  //   } catch (error) {
-  //     console.log(error);
-  //   } finally {
-  //     dispatch(HideLoading());
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (!portfolioData) getPortfolioData();
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [portfolioData]);
-
-  // useEffect(() => {
-  //   if (reloadData) getPortfolioData();
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [reloadData]);
 
   return (
     <>
@@ -62,8 +25,8 @@ export default function Home() {
             <Intro />
             {/* スクロール移動のためIntro.jsxに移動
             <About /> */}
-            <Experiences />
-            <Projects />
+            <TeamProjects />
+            <PersonalProjects />
             <Courses />
             <Contact />
             <Footer />
