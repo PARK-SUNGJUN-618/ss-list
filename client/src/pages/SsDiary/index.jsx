@@ -276,7 +276,6 @@ export default function SsDiary() {
     if (ssPage > 1) {
       getDiaries();
     }
-    // setSsPage( ssPage => ssPage + 1 );
   };
 
   useEffect(() => {
