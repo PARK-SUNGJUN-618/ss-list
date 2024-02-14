@@ -430,9 +430,6 @@ export default function Memory() {
               className="font-bold cursor-pointer text-[20vw] whitespace-nowrap text-center hover:scale-110"
               style={{ fontSize: gameClear || isFail ? "5vmin" : "20vmin" }}
               onClick={() => {
-                // animations.forEach((el) => {
-                //   el.kill();
-                // });
                 if (isFail || gameClear) {
                   restart();
                 } else {
