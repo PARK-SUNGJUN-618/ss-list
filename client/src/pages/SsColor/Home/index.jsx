@@ -2,7 +2,6 @@ import { useState } from "react";
 import { motion, useMotionValue } from "framer-motion";
 import { ReactComponent as ColorPencil } from "../../../img/colorPencil.svg";
 import { ReactComponent as UserAvatar } from "../../../img/userAvatar.svg";
-// import { useEffect } from "react";
 
 let colorArray = [
   "fill-red-200",
