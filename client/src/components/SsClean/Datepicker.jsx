@@ -252,7 +252,6 @@ export default function Datepicker(props) {
                             >
                               <div
                                 onClick={setDateValue(d)}
-                                // className={`cursor-pointer text-center text-sm leading-none rounded-full transition ease-in-out duration-100 ${
                                 className={`cursor-pointer text-center text-sm rounded-full leading-loose transition ease-in-out duration-100 ${
                                   isToday(d)
                                     ? "bg-ssclean-4 text-ssclean-2"
