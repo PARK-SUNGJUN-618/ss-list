@@ -1,4 +1,3 @@
-// import { Link } from "react-router-dom";
 import logo from "../../img/trnLogo.png";
 
 export default function Header() {
