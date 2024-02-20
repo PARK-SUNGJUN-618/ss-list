@@ -19,16 +19,14 @@ export default function SsListContent({ssTasks, handleRemoveTask, handleCheckedT
     const result = ssTaskList.map((data) => {
       return (
         <div key={data._id} className="grid grid-cols-9 text-xl items-center pb-4">
-          {/* <div className="col-span-9 grid grid-cols-7"> */}
-            <div className="col-span-1">
-              <input type="checkbox" checked={data.ssIsChecked} onChange={() => handleCheckedTask(data)}
-                className="accent-zinc-600 w-5 h-5"/>
-            </div>
-            <div className={"col-span-7 ml-1 break-all border-b-2 border-zinc-400 " + (data.ssIsChecked ? 'line-through text-zinc-400' : '')}
-              onClick={() => handleDetailedTask(data)}>
-              {data.ssTitle}
-            </div>
-          {/* </div> */}
+          <div className="col-span-1">
+            <input type="checkbox" checked={data.ssIsChecked} onChange={() => handleCheckedTask(data)}
+              className="accent-zinc-600 w-5 h-5"/>
+          </div>
+          <div className={"col-span-7 ml-1 break-all border-b-2 border-zinc-400 " + (data.ssIsChecked ? 'line-through text-zinc-400' : '')}
+            onClick={() => handleDetailedTask(data)}>
+            {data.ssTitle}
+          </div>
           <div className="col-span-1">
             <button className="text-red-500 active:text-red-600 active:bg-zinc-300 p-1 rounded-full"
               onClick={() => handleRemoveTask(data._id)}>
