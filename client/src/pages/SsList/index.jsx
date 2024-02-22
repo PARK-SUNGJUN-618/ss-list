@@ -7,6 +7,8 @@ import SsListContent from "../../components/SsListContent";
 import { format } from "date-fns";
 
 export default function SsList() {
+  // TODO SSList : javascript → typescript
+
   const [selectedDate, setSelectedDate] = useState(
     new Date(new Date().setHours(0, 0, 0, 0))
   );
