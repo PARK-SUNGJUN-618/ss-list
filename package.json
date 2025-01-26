@@ -24,5 +24,9 @@
     "mongodb": "^4.9.1",
     "pg": "^8.7.3",
     "react-waypoint": "^10.3.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9",
+    "react-scripts": "^5.0.1"
   }
 }
