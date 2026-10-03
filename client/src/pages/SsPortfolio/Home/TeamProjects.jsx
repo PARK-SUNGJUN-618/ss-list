@@ -41,7 +41,7 @@ export default function TeamProjects() {
 
   return (
     <div>
-      <SectionTitle title="Team Projects" />
+      <SectionTitle title="Professional Experience" />
       <div className="flex py-10 gap-20 sm:flex-col">
         <div
           className="flex flex-col gap-10 border-l-2 border-[#135e4c82] w-96
